@@ -1,0 +1,116 @@
+﻿<Window x:Class="ChmlFrp_Professional_Launcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChmlFrp_Professional_Launcher"
+        mc:Ignorable="d"
+        Height="430"
+        Width="780"
+        MinWidth="780"
+        MinHeight="430"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowState="Normal"
+        Title="ChmlFrp Professional Launcher">
+
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Border  CornerRadius="6,6,0,0"
+                     Grid.Row="0"
+                     MouseLeftButtonDown="Border_MouseLeftButtonDown"
+                     Height="50"
+                     Background="{DynamicResource ThemeColor}">
+                    <Grid>
+                        <Path Data="{DynamicResource logo}"
+                              Stretch="Fill"
+                              Fill="#CFE2F7"
+                              Margin="15,0,0,0"
+                              Width="35"
+                              Height="35"
+                              HorizontalAlignment="Left"/>
+
+                        <Grid>
+                            <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+
+                                <local:CornerIconRadioButton
+                                    IsChecked="True"
+                                    Margin="0,0,5,0"
+                                    Data="{DynamicResource home}"
+                                    Content="启动"
+                                    x:Name="LaunchPageButton"
+                                    Click="rdLaunchPage_Click" />
+
+                                <local:CornerIconRadioButton
+                                    Margin="0,0,5,0"
+                                    Content="登录"
+                                    Data="{DynamicResource login}"
+                                    x:Name="ChmlfrpPageButton"
+                                    Click="rdChmlfrpPage_Click" />
+
+                                <local:CornerIconRadioButton
+                                    Content="设置"
+                                    Data="{DynamicResource Settings}"
+                                    x:Name="SettingsPageButton"
+                                    Click="rdSettingsPage_Click" />
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel HorizontalAlignment="Right"
+                                Orientation="Horizontal"
+                                FlowDirection="RightToLeft">
+
+                            <Button x:Name="btnClose"
+                                Margin="15,0,0,0"
+                                Height="25"
+                                Width="25"
+                                Style="{StaticResource IconButtonsStyle}"
+                                Content="{DynamicResource close}"
+                                Click="btnClose_Click"
+                                Tag="IsCloseButton" />
+
+                            <Button x:Name="btnMinimize"
+                                Height="25"
+                                Margin="5,0,0,0"
+                                Width="25"
+                                Style="{StaticResource IconButtonsStyle}"
+                                Content="{DynamicResource minimize}"
+                                Click="btnMinimize_Click" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--背景板-->
+                <Grid Grid.Row="1">
+                    <Border Background="#C7D7EE"
+                        CornerRadius="0,0,6,6" />
+
+                    <Border CornerRadius="0,0,5,5">
+                        <Border.Background>
+                            <ImageBrush Opacity="0.8"
+                                    x:Name="Imagewallpaper" />
+                        </Border.Background>
+
+                        <Frame x:Name="PagesNavigation"
+                           NavigationUIVisibility="Hidden"/>
+
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <Frame x:Name="RemindersNavigation"
+               NavigationUIVisibility="Hidden"/>
+
+            <Frame x:Name="RemindersNavigationTwo"
+               NavigationUIVisibility="Hidden"/>
+        </Grid>
+</Window>

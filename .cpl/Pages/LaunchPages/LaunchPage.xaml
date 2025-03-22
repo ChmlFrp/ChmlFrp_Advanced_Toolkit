@@ -1,0 +1,43 @@
+﻿<Page x:Class="ChmlFrp_Professional_Launcher.Pages.LaunchPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:local="clr-namespace:ChmlFrp_Professional_Launcher"
+      mc:Ignorable="d"
+      d:DesignHeight="430"
+      d:DesignWidth="780"
+      Title="LaunchPage">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="350" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <Border Opacity="0.8"
+                    Background="#f9f9f9"
+                    CornerRadius="0,0,6,0">
+                <StackPanel Margin="0,0,0,20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Orientation="Vertical"
+                            Width="325">
+                    <local:CornerButten IsSelected="True"
+                                        CornerRadius="6,6,0,0"
+                                        Height="50" 
+                                        FontSize="15"
+                                        Content="启动FRPC"
+                                        x:Name="LaunchButton"
+                                        Click="Launch" />
+
+                    <local:CornerComboBox  x:Name="comboBox" 
+                                           Height="40"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource ThemeColor}"
+                                           CornerRadius="0,0,6,6"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

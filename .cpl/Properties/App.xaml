@@ -1,0 +1,16 @@
+﻿<Application x:Class="ChmlFrp_Professional_Launcher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ChmlFrp_Professional_Launcher"
+             StartupUri="/MainWindow.xaml">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Icons/SGY/Icons.xaml" />
+                <ResourceDictionary Source="/Styles/Style.xaml" />
+                <ResourceDictionary Source="/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

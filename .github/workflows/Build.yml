@@ -1,0 +1,55 @@
+name: .NET Framework Desktop
+permissions:
+  contents: read
+
+on:
+  push:
+    paths:
+
+      - ".cpl/**"
+      - ".github/workflows/Build.yml"
+  pull_request:
+    paths:
+      
+      - ".cpl/**"
+      - ".github/workflows/Build.yml"
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest
+
+    env:
+      Project_Path: ".cpl/ChmlFrp_Professional_Launcher.csproj"
+      Build_Output_Path: ".cpl/bin/${{ matrix.configuration }}/net48/ChmlFrp Professional Launcher.exe"
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2.0.0
+
+    - name: Install NuGet
+      uses: NuGet/setup-nuget@v1
+
+    - name: Restore NuGet packages
+      run: nuget restore ${{ env.Project_Path }}
+
+    - name: Build the project
+      run: msbuild ${{ env.Project_Path }} /p:Configuration=${{ matrix.configuration }}
+
+    - name: Upload a Build Artifact to GitHub
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.configuration }}
+        path: ${{ env.Build_Output_Path }}
