@@ -24,20 +24,29 @@
                             Margin="15"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
-                    <StackPanel Orientation="Vertical"
+                    <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <Button Margin="25"
+
+                        <Button Margin="0,0,5,0"
+                                BorderBrush="{DynamicResource ThemeColor}"
+                                Style="{StaticResource IconButtonsStyletwo}"
+                                Content="{DynamicResource add}"
+                                Width="40" Height="40"
+                                Click="btnAdd_Click" />
+
+                        <Button Margin="0,0,25,0"
                                 BorderBrush="{DynamicResource ThemeColor}"
                                 Style="{StaticResource IconButtonsStyletwo}"
                                 Content="{DynamicResource refresh}"
+                                Width="40" Height="40"
                                 Click="btnRefresh_Click" />
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid Margin="2" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -48,16 +57,32 @@
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="TunnelGridOne"
-                  Grid.Row="0" Grid.Column="0"/>
+                  Grid.Row="0" Grid.Column="0">
+                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
+
+                </Border>
+            </Grid>
 
             <Grid x:Name="TunnelGridTwo"
-                  Grid.Row="0" Grid.Column="1" />
+                  Grid.Row="0" Grid.Column="1" >
+                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
+
+                </Border>
+            </Grid>
 
             <Grid x:Name="TunnelGridThree"
-                  Grid.Row="1" Grid.Column="0" />
+                  Grid.Row="1" Grid.Column="0" >
+                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
+
+                </Border>
+            </Grid>
 
             <Grid x:Name="TunnelGridFour"
-                  Grid.Row="1" Grid.Column="1" />
+                  Grid.Row="1" Grid.Column="1" >
+                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
+
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

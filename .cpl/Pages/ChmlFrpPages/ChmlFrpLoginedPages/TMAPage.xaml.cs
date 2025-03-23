@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Controls;
-using Newtonsoft.Json.Linq;
 
 namespace ChmlFrp_Professional_Launcher.Pages.ChmlFrpLoginPages
 {
@@ -70,6 +72,14 @@ namespace ChmlFrp_Professional_Launcher.Pages.ChmlFrpLoginPages
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             InitializeApps();
+            MainClass.Reminders.Reminder_Box_Show("刷新成功");
+        }
+
+        private async void btnAdd_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            MainClass.Reminders.Reminder_Box_Show("跳转中...");
+            await Task.Delay(500);
+            Process.Start(new ProcessStartInfo("https://preview.panel.chmlfrp.cn/tunnel/list"));
         }
     }
 }

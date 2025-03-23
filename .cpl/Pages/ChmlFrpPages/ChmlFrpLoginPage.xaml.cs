@@ -87,6 +87,7 @@ namespace ChmlFrp_Professional_Launcher.Pages
 
         private async void signup(object sender, RoutedEventArgs e)
         {
+            MainClass.Reminders.Reminder_Box_Show("跳转中...");
             await Task.Delay(500);
             Process.Start(new ProcessStartInfo("https://preview.panel.chmlfrp.cn/sign"));
         }

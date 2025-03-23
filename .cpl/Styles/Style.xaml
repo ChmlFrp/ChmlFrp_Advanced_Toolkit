@@ -51,6 +51,10 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="ico" Property="Fill" Value="{DynamicResource WhiteColorLiglt}" />
                         </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ico" Property="Fill" Value="LightGray" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -236,22 +240,6 @@
                             <Setter TargetName="path" Property="Fill" Value="Black" />
                             <Setter TargetName="borderTextBlock" Property="Foreground" Value="Black" />
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsChecked" Value="True" />
-                                <Condition Property="Content" Value="GitCode"/>
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="path" Property="Fill" Value="#FF0000" />
-                            <Setter TargetName="borderTextBlock" Property="Foreground" Value="#FF0000" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True" />
-                                <Condition Property="Content" Value="GitCode"/>
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="path" Property="Fill" Value="#FF0000" />
-                            <Setter TargetName="borderTextBlock" Property="Foreground" Value="#FF0000" />
-                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -322,17 +310,17 @@
                                                   Fill="{DynamicResource ThemeColor}" 
                                                   Width="35" Height="35"
                                                   Stretch="Fill"
-                                                  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                                  Data="M11.65 14.65q.15.15.35.15t.35-.15l2.8-2.8q.25-.25.125-.55T14.8 11H9.2q-.35 0-.475.3t.125.55zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"
+                                                  HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
-<!--Data="M11.65 14.65q.15.15.35.15t.35-.15l2.8-2.8q.25-.25.125-.55T14.8 11H9.2q-.35 0-.475.3t.125.55zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"-->
                                         </Border>
 
-                                        <!--<ControlTemplate.Triggers>
+                                        <ControlTemplate.Triggers>
 
                                             <Trigger Property="IsChecked" Value="True">
                                                 <Setter TargetName="path" Property="Data" Value="M11 11.8V15q0 .425.288.713T12 16t.713-.288T13 15v-3.2l.9.9q.275.275.7.275t.7-.275t.275-.7t-.275-.7l-2.6-2.6q-.3-.3-.7-.3t-.7.3l-2.6 2.6q-.275.275-.275.7t.275.7t.7.275t.7-.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/>
                                             </Trigger>
-                                        </ControlTemplate.Triggers>-->
+                                        </ControlTemplate.Triggers>
 
                                     </ControlTemplate>
                                 </ToggleButton.Template>

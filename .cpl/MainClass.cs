@@ -18,15 +18,20 @@ namespace ChmlFrp_Professional_Launcher
     {
         static MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
 
+        public static bool IsProcess(string name)
+        {
+            if (Process.GetProcessesByName(name).Length > 1) 
+                return true;
+            return false;
+        }
+
         //初始化
         public static void Initialize()
         {
             new Paths();
 
             // 检测是否有两个ChmlFrp Professional Launcher进程
-            var currentProcess = Process.GetCurrentProcess();
-            var processes = Process.GetProcessesByName(currentProcess.ProcessName);
-            if (processes.Length > 1)
+            if (IsProcess(Process.GetCurrentProcess().ProcessName))
             {
                 MainWindow.Close();
                 return;
@@ -57,14 +62,6 @@ namespace ChmlFrp_Professional_Launcher
                     FileIniDataParser parser = new();
                     data.Sections.AddSection("ChmlFrp_Professional_Launcher Setup");
                     parser.WriteFile(Paths.setupIniPath, data);
-                }
-                //创建日志文件
-                for (int i = 1; i < 6; i++)
-                {
-                    if (!File.Exists(Path.Combine(Paths.CPLPath, i + ".logs")))
-                    {
-                        File.Create(Path.Combine(Paths.CPLPath, i + ".logs"));
-                    }
                 }
             }
             catch
@@ -280,7 +277,8 @@ namespace ChmlFrp_Professional_Launcher
             public static void Reminder_Interface_Show(
                 string subject,
                 string message,
-                bool isUpdate = false
+                bool isUpdate = false,
+                string url = ""
             )
             {
                 Reminder_Interface_Show Reminder_Interface_Show = new();
@@ -299,10 +297,6 @@ namespace ChmlFrp_Professional_Launcher
                             Paths.CPLPath,
                             "ChmlFrp_Professional_Launcher.exe"
                         );
-                        var JObject1 = JObject.Parse(
-                            File.ReadAllText(MainClass.Paths.Temp.temp_api_update)
-                        );
-                        string url = JObject1["url"]?.ToString();
 
                         if (Downloadfiles.Download(url, EXE))
                         {
@@ -384,6 +378,7 @@ namespace ChmlFrp_Professional_Launcher
                 string version = JObject1["version"]?.ToString();
                 string subject = JObject1["subject"]?.ToString();
                 string text = JObject1["text"]?.ToString();
+                string url = JObject1["url"]?.ToString();
 
                 if (version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
                 {
@@ -396,7 +391,7 @@ namespace ChmlFrp_Professional_Launcher
                     MainClass.Reminders.Reminder_Box_Show("发现新版本", "blue");
 
                     await Task.Delay(2000);
-                    Reminders.Reminder_Interface_Show(subject, text, true);
+                    Reminders.Reminder_Interface_Show(subject, text, true ,url);
                 }
             }
             else
