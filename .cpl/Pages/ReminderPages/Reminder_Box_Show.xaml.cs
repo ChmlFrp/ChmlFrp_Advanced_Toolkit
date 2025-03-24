@@ -13,10 +13,21 @@ namespace ChmlFrp_Professional_Launcher.Pages
         public Reminder_Box_Show()
         {
             InitializeComponent();
-            Loaded += RemindersPage_Loaded;
+            IsVisibleChanged += Reminder_Box_Show_IsVisibleChanged;
         }
 
-        private void RemindersPage_Loaded(object sender, RoutedEventArgs e)
+        private void Reminder_Box_Show_IsVisibleChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e
+        )
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                StartTimer();
+            }
+        }
+
+        private void StartTimer()
         {
             DispatcherTimer timer = new();
             timer.Interval = TimeSpan.FromSeconds(3);

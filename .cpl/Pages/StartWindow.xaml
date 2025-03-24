@@ -12,5 +12,5 @@
         AllowsTransparency="True"
         ResizeMode="NoResize"
         WindowState="Normal">
-    <Path Data="{DynamicResource logo}" Fill="{DynamicResource ThemeColor}" Stretch="Fill"/>
+    <Path Data="{DynamicResource logo}" Fill="{DynamicResource ThemeColor}" Stretch="Fill" />
 </Window>

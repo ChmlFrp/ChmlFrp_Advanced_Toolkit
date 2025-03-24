@@ -46,7 +46,7 @@
             </Border>
         </Grid>
 
-        <Grid Margin="2" Grid.Row="1">
+        <Grid x:Name="MainGrid" Margin="2" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -55,34 +55,6 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-
-            <Grid x:Name="TunnelGridOne"
-                  Grid.Row="0" Grid.Column="0">
-                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
-
-                </Border>
-            </Grid>
-
-            <Grid x:Name="TunnelGridTwo"
-                  Grid.Row="0" Grid.Column="1" >
-                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
-
-                </Border>
-            </Grid>
-
-            <Grid x:Name="TunnelGridThree"
-                  Grid.Row="1" Grid.Column="0" >
-                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
-
-                </Border>
-            </Grid>
-
-            <Grid x:Name="TunnelGridFour"
-                  Grid.Row="1" Grid.Column="1" >
-                <Border Margin="2" Opacity="0.8" Background="{DynamicResource WhiteColorLiglt}" CornerRadius="6">
-
-                </Border>
-            </Grid>
         </Grid>
     </Grid>
 </Page>

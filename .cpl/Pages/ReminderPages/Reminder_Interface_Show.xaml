@@ -30,33 +30,33 @@
                 HorizontalAlignment="Center">
             <Grid>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="SubjectTextBlock" 
-                               FontSize="25" Text="我是擎天柱" 
-                               Foreground="#0B5BCB" Margin="20,20,0,0" 
-                               VerticalAlignment="Top" 
+                    <TextBlock x:Name="SubjectTextBlock"
+                               FontSize="25" Text="我是擎天柱"
+                               Foreground="#0B5BCB" Margin="20,20,0,0"
+                               VerticalAlignment="Top"
                                HorizontalAlignment="Left" />
-                    <Border CornerRadius="2,2,2,2" 
-                            Background="{DynamicResource ThemeColor}" 
-                            Width="400" Height="2" 
+                    <Border CornerRadius="2,2,2,2"
+                            Background="{DynamicResource ThemeColor}"
+                            Width="400" Height="2"
                             Margin="0,4,0,0" />
-                    <TextBox x:Name="TextTextBlock" 
-                             FontSize="16" 
-                             Margin="25,10,0,0" 
-                             Text="我是擎天柱" 
-                             Background="Transparent" 
-                             Foreground="#5C5C5C" 
-                             IsReadOnly="True" 
+                    <TextBox x:Name="TextTextBlock"
+                             FontSize="16"
+                             Margin="25,10,0,0"
+                             Text="我是擎天柱"
+                             Background="Transparent"
+                             Foreground="#5C5C5C"
+                             IsReadOnly="True"
                              BorderThickness="0" />
                 </StackPanel>
-                <local:CornerButten FontSize="14" 
-                                    CornerRadius="3" 
-                                    Content="确定" 
+                <local:CornerButten FontSize="14"
+                                    CornerRadius="3"
+                                    Content="确定"
                                     x:Name="Yes_CornerButten"
-                                    BorderThickness="1" 
+                                    BorderThickness="1"
                                     IsSelected="True"
-                                    Width="55" Height="35" 
-                                    Margin="0,0,25,25" 
-                                    VerticalAlignment="Bottom" 
+                                    Width="55" Height="35"
+                                    Margin="0,0,25,25"
+                                    VerticalAlignment="Bottom"
                                     HorizontalAlignment="Right" />
             </Grid>
         </Border>

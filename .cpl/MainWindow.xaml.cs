@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ChmlFrp_Professional_Launcher.Pages;
+using static ChmlFrp_Professional_Launcher.MainClass;
 
 namespace ChmlFrp_Professional_Launcher
 {
@@ -15,35 +16,24 @@ namespace ChmlFrp_Professional_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
-        BlankPage BlankPage;
-        public LaunchPage LaunchPage;
-        public ChmlFrphomePage ChmlFrpHomePage;
-        public ChmlFrpLoginPage ChmlFrpLoginPage;
-
-        public bool SignInBool;
+        private BlankPage BlankPage = new();
+        public static ChmlFrpLoginPage ChmlFrpLoginPage;
 
         public MainWindow()
         {
-            // 弹出加载页
+            MainWindowClass = this;
+            Initialize();
+            InitializeComponent();
             StartWindow StartWindow = new();
             StartWindow.Show();
             Thread.Sleep(2000);
             StartWindow.Close();
 
-            if (!MainClass.Downloadfiles.GetAPItoLogin(false))
-                SignInBool = true;
-            else
-                SignInBool = false;
-            // 初始化页面
-            LaunchPage = new();
-            BlankPage = new();
-            ChmlFrpHomePage = new();
-            // 初始化主窗口
-            InitializeComponent();
+            if (!Downloadfiles.GetAPItoLogin(false))
+                ChmlFrpLoginPage = new();
 
-            // 显示背景图片
             string[] imageFiles = Directory
-                .GetFiles(MainClass.Paths.pictures_path, "*.*")
+                .GetFiles(Paths.pictures_path, "*.*")
                 .Where(file =>
                     file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
                     || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
@@ -59,29 +49,29 @@ namespace ChmlFrp_Professional_Launcher
                 );
                 Imagewallpaper.Stretch = Stretch.UniformToFill;
             }
-            MainClass.Reminders.LogsOutputting("背景图片或默认加载成功");
-            // 进入启动页
-            rdLaunchPage_Click(this, new RoutedEventArgs());
-            if (!File.Exists(MainClass.Paths.frpExePath))
+
+            rdLaunchPage_Click(null, null);
+            Update();
+            if (!File.Exists(Paths.frpExePath))
             {
-                MainClass.Reminders.Reminder_Download_Show();
+                Reminders.Reminder_Download_Show();
             }
-            MainClass.Update();
         }
 
         public void rdChmlfrpPage_Click(object sender, RoutedEventArgs e)
         {
-            PagesNavigation.Navigate(ChmlFrpHomePage);
-            if (SignInBool)
+            if (!SignInBool)
             {
-                ChmlFrpLoginPage = new();
+                ChmlFrpLoginPage.Visibility = Visibility.Visible;
                 RemindersNavigation.Navigate(ChmlFrpLoginPage);
             }
+
+            PagesNavigation.Navigate(PagesClass.ChmlFrpHomePage);
         }
 
         private void rdLaunchPage_Click(object sender, RoutedEventArgs e)
         {
-            PagesNavigation.Navigate(LaunchPage);
+            PagesNavigation.Navigate(PagesClass.LaunchPage);
         }
 
         private void rdSettingsPage_Click(object sender, RoutedEventArgs e)
@@ -91,7 +81,7 @@ namespace ChmlFrp_Professional_Launcher
 
         protected override void OnClosed(EventArgs e)
         {
-            MainClass.Reminders.LogsOutputting("退出软件中...");
+            Reminders.LogsOutputting("退出软件中...");
             base.OnClosed(e);
         }
 

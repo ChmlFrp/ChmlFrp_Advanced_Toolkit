@@ -14,16 +14,24 @@ using Newtonsoft.Json.Linq;
 
 namespace ChmlFrp_Professional_Launcher
 {
-    class MainClass
+    internal class MainClass
     {
-        static MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
+        public static MainWindow MainWindowClass;
+
+        internal static class PagesClass
+        {
+            public static ChmlFrphomePage ChmlFrpHomePage = new();
+            public static LaunchPage LaunchPage = new();
+        }
 
         public static bool IsProcess(string name)
         {
-            if (Process.GetProcessesByName(name).Length > 1) 
+            if (Process.GetProcessesByName(name).Length > 1)
                 return true;
             return false;
         }
+
+        public static volatile bool SignInBool;
 
         //初始化
         public static void Initialize()
@@ -33,7 +41,7 @@ namespace ChmlFrp_Professional_Launcher
             // 检测是否有两个ChmlFrp Professional Launcher进程
             if (IsProcess(Process.GetCurrentProcess().ProcessName))
             {
-                MainWindow.Close();
+                MainWindowClass.Close();
                 return;
             }
 
@@ -74,6 +82,7 @@ namespace ChmlFrp_Professional_Launcher
         {
             //定义路径
             public static string directoryPath = Directory.GetCurrentDirectory();
+
             public static string IniPath;
             public static string frpExePath;
             public static string setupIniPath;
@@ -134,7 +143,7 @@ namespace ChmlFrp_Professional_Launcher
             {
                 if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
                 {
-                    MainClass.Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
+                    Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
                     return false;
                 }
 
@@ -146,12 +155,10 @@ namespace ChmlFrp_Professional_Launcher
                 }
                 catch
                 {
-                    MainClass.Reminders.LogsOutputting(
-                        $"下载失败：文件占用或网络错误?path={path}&url={url}"
-                    );
+                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?path={path}&url={url}");
                     return false;
                 }
-                MainClass.Reminders.LogsOutputting($"下载成功：已下载?path={path}");
+                Reminders.LogsOutputting($"下载成功：已下载?path={path}");
                 return true;
             }
 
@@ -159,7 +166,7 @@ namespace ChmlFrp_Professional_Launcher
             {
                 if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
                 {
-                    MainClass.Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
+                    Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
                     return false;
                 }
 
@@ -171,12 +178,10 @@ namespace ChmlFrp_Professional_Launcher
                 }
                 catch
                 {
-                    MainClass.Reminders.LogsOutputting(
-                        $"下载失败：文件占用或网络错误?path={path}&url={url}"
-                    );
+                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?path={path}&url={url}");
                     return false;
                 }
-                MainClass.Reminders.LogsOutputting($"下载成功：已下载?path={path}");
+                Reminders.LogsOutputting($"下载成功：已下载?path={path}");
                 return true;
             }
 
@@ -194,32 +199,36 @@ namespace ChmlFrp_Professional_Launcher
                     string msg = JObject
                         .Parse(File.ReadAllText(Paths.Temp.temp_api_login))["msg"]
                         ?.ToString();
-                    MainClass.Reminders.LogsOutputting("API提醒：" + msg);
+                    Reminders.LogsOutputting("API提醒：" + msg);
                     if (msg == "登录成功")
                     {
+                        SignInBool = true;
                         if (Remind)
-                            MainClass.Reminders.Reminder_Box_Show(msg);
+                            Reminders.Reminder_Box_Show(msg);
                         return true;
                     }
                     else
                     {
                         if (Remind)
-                            MainClass.Reminders.Reminder_Box_Show(msg, "red");
-                        return false;
+                            Reminders.Reminder_Box_Show(msg, "red");
                     }
                 }
                 else
                 {
                     if (Remind)
-                        MainClass.Reminders.Reminder_Box_Show("网络错误", "red");
-                    return false;
+                        Reminders.Reminder_Box_Show("网络错误", "red");
                 }
+                SignInBool = false;
+                return false;
             }
         }
 
         internal static class Reminders
         {
             private static int i = 1;
+            private static Reminder_Box_Show Reminder_Box_Show_Window = new();
+            private static Reminder_Interface_Show Reminder_Interface_Show_Window = new();
+            public static Reminder_Download_Show Reminder_Download_Show_Window = new();
 
             public static void LogsOutputting(string logEntry)
             {
@@ -227,13 +236,13 @@ namespace ChmlFrp_Professional_Launcher
                 {
                     case 1:
                         //清空文件
-                        File.WriteAllText(MainClass.Paths.logfilePath, string.Empty);
+                        File.WriteAllText(Paths.logfilePath, string.Empty);
                         i++;
                         break;
                 }
                 logEntry = $"[{DateTime.Now}] " + logEntry;
                 Console.WriteLine(logEntry);
-                File.AppendAllText(MainClass.Paths.logfilePath, logEntry + Environment.NewLine);
+                File.AppendAllText(Paths.logfilePath, logEntry + Environment.NewLine);
             }
 
             public static void Reminder_Box_Show(string message, string color = "green")
@@ -244,34 +253,40 @@ namespace ChmlFrp_Professional_Launcher
                     return;
                 }
 
-                Reminder_Box_Show Reminder_Box_Show = new();
+                if (Reminder_Box_Show_Window.Visibility == Visibility.Collapsed)
+                {
+                    Reminder_Box_Show_Window.Visibility = Visibility.Visible;
+                }
+
                 if (color == "green")
                 {
-                    Reminder_Box_Show.RemindersBorder.Background = new SolidColorBrush(
+                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
                         Colors.LimeGreen
                     );
                 }
                 else if (color == "blue")
                 {
-                    Reminder_Box_Show.RemindersBorder.Background = new SolidColorBrush(
+                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
                         Colors.DodgerBlue
                     );
                 }
                 else if (color == "red")
                 {
-                    Reminder_Box_Show.RemindersBorder.Background = new SolidColorBrush(Colors.Red);
+                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
+                        Colors.Red
+                    );
                 }
                 else if (color == "yellow")
                 {
-                    Reminder_Box_Show.RemidingTextBlock.Foreground = new SolidColorBrush(
+                    Reminder_Box_Show_Window.RemidingTextBlock.Foreground = new SolidColorBrush(
                         Colors.Green
                     );
-                    Reminder_Box_Show.RemindersBorder.Background = new SolidColorBrush(
+                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
                         Colors.Yellow
                     );
                 }
-                Reminder_Box_Show.RemidingTextBlock.Text = message;
-                MainWindow.RemindersNavigationTwo.Navigate(Reminder_Box_Show);
+                Reminder_Box_Show_Window.RemidingTextBlock.Text = message;
+                MainWindowClass.RemindersNavigationTwo.Navigate(Reminder_Box_Show_Window);
             }
 
             public static void Reminder_Interface_Show(
@@ -281,15 +296,25 @@ namespace ChmlFrp_Professional_Launcher
                 string url = ""
             )
             {
-                Reminder_Interface_Show Reminder_Interface_Show = new();
-                Reminder_Interface_Show.Yes_CornerButten.IsSelected = true;
+                if (string.IsNullOrWhiteSpace(subject) || string.IsNullOrWhiteSpace(message))
+                {
+                    LogsOutputting("提醒消息不能为空或全为空格");
+                    return;
+                }
+
+                if (Reminder_Interface_Show_Window.Visibility == Visibility.Collapsed)
+                {
+                    Reminder_Interface_Show_Window.Visibility = Visibility.Visible;
+                }
+
+                Reminder_Interface_Show_Window.Yes_CornerButten.IsSelected = true;
 
                 if (isUpdate)
                 {
-                    Reminder_Interface_Show.Yes_CornerButten.Content = "更新";
-                    Reminder_Interface_Show.Yes_CornerButten.Click += async (sender, e) =>
+                    Reminder_Interface_Show_Window.Yes_CornerButten.Content = "更新";
+                    Reminder_Interface_Show_Window.Yes_CornerButten.Click += async (sender, e) =>
                     {
-                        Reminder_Interface_Show.Visibility = Visibility.Collapsed;
+                        Reminder_Interface_Show_Window.Visibility = Visibility.Collapsed;
 
                         await Task.Delay(1000);
 
@@ -300,8 +325,8 @@ namespace ChmlFrp_Professional_Launcher
 
                         if (Downloadfiles.Download(url, EXE))
                         {
-                            MainClass.Reminders.Reminder_Box_Show("下载成功");
-                            MainClass.Reminders.LogsOutputting("下载成功");
+                            Reminders.Reminder_Box_Show("下载成功");
+                            Reminders.LogsOutputting("下载成功");
 
                             string batchFilePath = Path.Combine(Paths.CPLPath, "update.bat");
 
@@ -332,40 +357,44 @@ namespace ChmlFrp_Professional_Launcher
                             process.Start();
 
                             // 关闭当前应用程序
-                            MainWindow.Close();
+                            MainWindowClass.Close();
                         }
                         else
                         {
-                            MainClass.Reminders.Reminder_Box_Show("更新失败", "red");
-                            MainClass.Reminders.LogsOutputting("更新失败");
-                            Reminder_Interface_Show.Visibility = Visibility.Collapsed;
+                            Reminders.Reminder_Box_Show("更新失败", "red");
+                            Reminders.LogsOutputting("更新失败");
+                            Reminder_Interface_Show_Window.Visibility = Visibility.Collapsed;
                         }
                     };
                 }
                 else
                 {
-                    Reminder_Interface_Show.Yes_CornerButten.Click += (sender, e) =>
+                    Reminder_Interface_Show_Window.Yes_CornerButten.Click += (sender, e) =>
                     {
-                        Reminder_Interface_Show.Visibility = Visibility.Collapsed;
+                        Reminder_Interface_Show_Window.Visibility = Visibility.Collapsed;
                     };
                 }
 
-                Reminder_Interface_Show.SubjectTextBlock.Text = subject;
-                Reminder_Interface_Show.TextTextBlock.Text = message;
-                MainWindow.RemindersNavigation.Navigate(Reminder_Interface_Show);
+                Reminder_Interface_Show_Window.SubjectTextBlock.Text = subject;
+                Reminder_Interface_Show_Window.TextTextBlock.Text = message;
+                MainWindowClass.RemindersNavigation.Navigate(Reminder_Interface_Show_Window);
             }
 
             public static void Reminder_Download_Show()
             {
-                Reminder_Download_Show Reminder_Download_Show = new();
-                MainWindow.RemindersNavigation.Navigate(Reminder_Download_Show);
+                if (Reminder_Download_Show_Window.Visibility == Visibility.Collapsed)
+                {
+                    Reminder_Download_Show_Window.Visibility = Visibility.Visible;
+                }
+
+                MainWindowClass.RemindersNavigation.Navigate(Reminder_Download_Show_Window);
             }
         }
 
         public static async void Update()
         {
-            MainClass.Reminders.Reminder_Box_Show("开始更新", "blue");
-            MainClass.Reminders.LogsOutputting("开始更新");
+            Reminders.Reminder_Box_Show("开始更新", "blue");
+            Reminders.LogsOutputting("开始更新");
 
             if (
                 await Downloadfiles.Downloadasync(
@@ -382,22 +411,22 @@ namespace ChmlFrp_Professional_Launcher
 
                 if (version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
                 {
-                    MainClass.Reminders.Reminder_Box_Show("已是最新版本");
-                    MainClass.Reminders.LogsOutputting("已是最新版本");
+                    Reminders.Reminder_Box_Show("已是最新版本");
+                    Reminders.LogsOutputting("已是最新版本");
                     return;
                 }
                 else
                 {
-                    MainClass.Reminders.Reminder_Box_Show("发现新版本", "blue");
+                    Reminders.Reminder_Box_Show("发现新版本", "blue");
 
                     await Task.Delay(2000);
-                    Reminders.Reminder_Interface_Show(subject, text, true ,url);
+                    Reminders.Reminder_Interface_Show(subject, text, true, url);
                 }
             }
             else
             {
-                MainClass.Reminders.Reminder_Box_Show("更新失败", "red");
-                MainClass.Reminders.LogsOutputting("更新失败");
+                Reminders.Reminder_Box_Show("更新失败", "red");
+                Reminders.LogsOutputting("更新失败");
             }
         }
     }

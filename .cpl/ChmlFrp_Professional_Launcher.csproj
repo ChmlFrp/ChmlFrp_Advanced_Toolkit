@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <UseWPF>true</UseWPF>
-    <Version>0.0.0.9</Version>
+    <Version>0.0.1.0</Version>
     <LangVersion>9</LangVersion>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
