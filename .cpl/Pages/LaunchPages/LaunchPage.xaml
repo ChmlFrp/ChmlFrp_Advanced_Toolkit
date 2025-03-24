@@ -25,17 +25,17 @@
                             Width="325">
                     <local:CornerButten IsSelected="True"
                                         CornerRadius="6,6,0,0"
-                                        Height="50" 
+                                        Height="50"
                                         FontSize="15"
                                         Content="启动FRPC"
                                         x:Name="LaunchButton"
                                         Click="Launch" />
 
-                    <local:CornerComboBox  x:Name="comboBox" 
+                    <local:CornerComboBox  x:Name="comboBox"
                                            Height="40"
                                            FontSize="12"
                                            Foreground="{DynamicResource ThemeColor}"
-                                           CornerRadius="0,0,6,6"/>
+                                           CornerRadius="0,0,6,6" />
                 </StackPanel>
             </Border>
         </Grid>

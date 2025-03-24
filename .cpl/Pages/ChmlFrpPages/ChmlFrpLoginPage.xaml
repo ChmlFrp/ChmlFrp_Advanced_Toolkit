@@ -18,9 +18,8 @@
                      MouseLeftButtonDown="Border_MouseLeftButtonDown"
                      Width="780"
                      Height="50"
-                     Background="Transparent"/>
+                     Background="Transparent" />
         </Border>
-
 
         <Border CornerRadius="6,6,6,6"
                 Height="225"
@@ -37,7 +36,7 @@
                                          Height="35"
                                          Width="380"
                                          Margin="0,-25,0,0"
-                                         Postscript="用户名或邮箱"/>
+                                         Postscript="用户名或邮箱" />
 
                     <local:CornerTextBox x:Name="TextBox_password"
                                          CornerRadius="5"
@@ -48,57 +47,54 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical">
-                    <TextBlock x:Name="SubjectTextBlock" 
-                               FontSize="25" 
-                               Text="登录CHMLFRP" 
-                               Foreground="#0B5BCB" Margin="20,20,0,0" 
-                               VerticalAlignment="Top" 
+                    <TextBlock x:Name="SubjectTextBlock"
+                               FontSize="25"
+                               Text="登录CHMLFRP"
+                               Foreground="#0B5BCB" Margin="20,20,0,0"
+                               VerticalAlignment="Top"
                                HorizontalAlignment="Left" />
 
-                    <Border CornerRadius="2,2,2,2" 
-                            Background="{DynamicResource ThemeColor}" 
-                            Width="400" 
-                            Height="2" 
+                    <Border CornerRadius="2,2,2,2"
+                            Background="{DynamicResource ThemeColor}"
+                            Width="400"
+                            Height="2"
                             Margin="0,4,0,0" />
-
                 </StackPanel>
 
-                <StackPanel Margin="0,0,25,25" 
-                            VerticalAlignment="Bottom" 
+                <StackPanel Margin="0,0,25,25"
+                            VerticalAlignment="Bottom"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
 
                     <local:CornerButten Margin="0,0,5,0"
-                                        FontSize="14" 
-                                        CornerRadius="3" 
-                                        Content="退出" 
+                                        FontSize="14"
+                                        CornerRadius="3"
+                                        Content="退出"
                                         IsSelected="True"
                                         Click="exit"
                                         Height="35"
-                                        Width="60"/>
+                                        Width="60" />
 
-                    <local:CornerButten FontSize="14" 
-                                        CornerRadius="3" 
-                                        Content="登录" 
+                    <local:CornerButten FontSize="14"
+                                        CornerRadius="3"
+                                        Content="登录"
                                         IsSelected="True"
                                         x:Name="logonButton"
                                         Click="logon"
                                         Height="35"
-                                        Width="60"/>
-
+                                        Width="60" />
                 </StackPanel>
 
                 <local:CornerButten VerticalAlignment="Bottom"
                                     HorizontalAlignment="Left"
                                     Margin="25,0,0,25"
-                                    FontSize="14" 
-                                    CornerRadius="3" 
-                                    Content="注册" 
+                                    FontSize="14"
+                                    CornerRadius="3"
+                                    Content="注册"
                                     IsSelected="True"
                                     Click="signup"
                                     Height="35"
-                                    Width="60"/>
-
+                                    Width="60" />
             </Grid>
         </Border>
     </Grid>

@@ -10,7 +10,6 @@ namespace ChmlFrp_Professional_Launcher.Pages
         public SettingHomePage()
         {
             InitializeComponent();
-            MainClass.Reminders.LogsOutputting("进入SettingHomePage");
         }
     }
 }

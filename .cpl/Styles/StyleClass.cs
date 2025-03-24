@@ -54,8 +54,20 @@ namespace ChmlFrp_Professional_Launcher
 
         public CornerTextBox()
         {
-            GotFocus += TextBox_GotFocus;
-            LostFocus += TextBox_LostFocus;
+            Loaded += CornerTextBox_Loaded;
+
+            TextChanged += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(Text))
+                    Postscript = TempText;
+                else
+                    Postscript = "";
+            };
+        }
+
+        private void CornerTextBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            TempText = Postscript;
         }
 
         //CornerRadius
@@ -86,7 +98,7 @@ namespace ChmlFrp_Professional_Launcher
         }
 
         //Text
-        public static new readonly DependencyProperty TextProperty = DependencyProperty.Register(
+        public new static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
             typeof(string),
             typeof(CornerTextBox),
@@ -115,23 +127,6 @@ namespace ChmlFrp_Professional_Launcher
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        //Focus
-        int i;
-
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            i++;
-            if (i == 1)
-                TempText = Postscript;
-            Postscript = "";
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (Text == "")
-                Postscript = TempText;
-        }
     }
 
     public class CornerComboBox : ComboBox
@@ -142,11 +137,45 @@ namespace ChmlFrp_Professional_Launcher
             get { return (CornerRadius)GetValue(CornerRadiusProperty); }
             set { SetValue(CornerRadiusProperty, value); }
         }
+
         public static readonly DependencyProperty CornerRadiusProperty =
             DependencyProperty.Register(
                 "CornerRadius",
                 typeof(CornerRadius),
                 typeof(CornerComboBox)
             );
+    }
+
+    public class CornerTextBlock : TextBox
+    {
+        //CornerRadius
+        public CornerRadius CornerRadius
+        {
+            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
+            set { SetValue(CornerRadiusProperty, value); }
+        }
+
+        public static readonly DependencyProperty CornerRadiusProperty =
+            DependencyProperty.Register(
+                "CornerRadius",
+                typeof(CornerRadius),
+                typeof(CornerTextBlock)
+            );
+    }
+
+    public class CornerTunnelTextBox : CornerTextBlock
+    {
+        //IsTrue
+        public bool IsTrue
+        {
+            get { return (bool)GetValue(IsTrueProperty); }
+            set { SetValue(IsTrueProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsTrueProperty = DependencyProperty.Register(
+            "IsTrue",
+            typeof(bool),
+            typeof(CornerTunnelTextBox)
+        );
     }
 }

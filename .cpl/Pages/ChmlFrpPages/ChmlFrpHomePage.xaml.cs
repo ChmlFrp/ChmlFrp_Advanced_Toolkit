@@ -1,6 +1,7 @@
-﻿using ChmlFrp_Professional_Launcher.Pages.ChmlFrpLoginPages;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using ChmlFrp_Professional_Launcher.Pages.ChmlFrpLoginPages;
+using static ChmlFrp_Professional_Launcher.MainClass;
 
 namespace ChmlFrp_Professional_Launcher.Pages
 {
@@ -9,14 +10,13 @@ namespace ChmlFrp_Professional_Launcher.Pages
     /// </summary>
     public partial class ChmlFrphomePage : Page
     {
-        MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
-        HomePage HomePage;
-        TMAPage TMAPage;
+        private HomePage HomePage;
+        private TMAPage TMAPage;
 
         public ChmlFrphomePage()
         {
             InitializeComponent();
-            if (MainWindow.SignInBool)
+            if (!SignInBool)
                 return;
             HomePage = new();
             TMAPage = new();
