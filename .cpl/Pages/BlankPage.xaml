@@ -5,24 +5,25 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       d:DesignHeight="450"
-        d:DesignWidth="800"
+      d:DesignWidth="800"
       Title="BlankPage">
 
     <Grid>
-        <Grid       HorizontalAlignment="Center"
+        <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <Path Margin="0,-25,0,0"
-                   Data="{DynamicResource construction}"
-                   Fill="{DynamicResource ThemeColor}"
-                   Stretch="Fill"
-                   Height="200"
-                   Width="200" />
+                  Data="{DynamicResource construction}"
+                  Fill="{DynamicResource WhiteColorLight}"
+                  Stretch="Fill"
+                  Height="200"
+                  Width="200" />
             <TextBlock FontSize="25"
-                    FontFamily="Segoe UI"
+                       FontWeight="Bold"
+                       x:Name="TextBlock"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                    Foreground="{DynamicResource WhiteColorLiglt}"
-                    Text="正在施工中..." />
-        </Grid>
+                       Foreground="{DynamicResource WhiteColorLight}"
+                       Text="正在施工中..." />
+        </StackPanel>
     </Grid>
 </Page>

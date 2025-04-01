@@ -7,133 +7,97 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using ChmlFrp_Professional_Launcher.Pages;
-using IniParser;
-using IniParser.Model;
+using ChmlFrp_Professional_Launcher.Pages.ChmlFrpPages;
+using ChmlFrp_Professional_Launcher.Pages.LaunchPages;
+using ChmlFrp_Professional_Launcher.Pages.ReminderPages;
 using Newtonsoft.Json.Linq;
+using Microsoft.Win32;
+using System.Linq;
+using System.Windows.Media.Imaging;
 
 namespace ChmlFrp_Professional_Launcher
 {
-    internal class MainClass
+    public partial class App
+    {
+        static App()
+        {
+            MainClass.Initialize.InitializeFirst();
+        }
+    }
+
+    internal static class MainClass
     {
         public static MainWindow MainWindowClass;
 
         internal static class PagesClass
         {
             public static ChmlFrphomePage ChmlFrpHomePage = new();
-            public static LaunchPage LaunchPage = new();
+            public static readonly LaunchPage LaunchPage = new();
         }
 
-        public static bool IsProcess(string name)
+        private static bool IsProcess(string name)
         {
-            if (Process.GetProcessesByName(name).Length > 1)
-                return true;
-            return false;
+            return Process.GetProcessesByName(name).Length > 1;
         }
 
         public static volatile bool SignInBool;
 
-        //初始化
-        public static void Initialize()
-        {
-            new Paths();
-
-            // 检测是否有两个ChmlFrp Professional Launcher进程
-            if (IsProcess(Process.GetCurrentProcess().ProcessName))
-            {
-                MainWindowClass.Close();
-                return;
-            }
-
-            try
-            {
-                //检测是否有相关配置文件
-                if (!File.Exists(Paths.CPLPath))
-                {
-                    Directory.CreateDirectory(Paths.CPLPath);
-                }
-                if (!File.Exists(Paths.pictures_path))
-                {
-                    Directory.CreateDirectory(Paths.pictures_path);
-                }
-                if (File.Exists(Path.Combine(Paths.CPLPath, "update.bat")))
-                {
-                    File.Delete(Path.Combine(Paths.CPLPath, "update.bat"));
-                }
-                if (!File.Exists(Paths.IniPath))
-                {
-                    Directory.CreateDirectory(Paths.IniPath);
-                }
-                if (!File.Exists(Paths.setupIniPath))
-                {
-                    IniData data = new();
-                    FileIniDataParser parser = new();
-                    data.Sections.AddSection("ChmlFrp_Professional_Launcher Setup");
-                    parser.WriteFile(Paths.setupIniPath, data);
-                }
-            }
-            catch
-            {
-                Reminders.LogsOutputting("文件占用无法创建");
-            }
-        }
-
         internal class Paths
         {
             //定义路径
-            public static string directoryPath = Directory.GetCurrentDirectory();
+            private static readonly string DirectoryPath = Directory.GetCurrentDirectory();
 
             public static string IniPath;
-            public static string frpExePath;
-            public static string setupIniPath;
-            public static string CPLPath;
-            public static string pictures_path;
-            public static string logfilePath;
+            public static string FrpExePath;
+            public static string CplPath;
+            public static string PicturesPath;
+            public static string LogfilePath;
 
             public Paths()
             {
-                CPLPath = Path.Combine(directoryPath, "CPL");
-                pictures_path = Path.Combine(CPLPath, "Pictures");
-                IniPath = Path.Combine(CPLPath, "Ini");
-                logfilePath = Path.Combine(CPLPath, "Debug.logs");
-                setupIniPath = Path.Combine(CPLPath, "Setup.ini");
-                frpExePath = Path.Combine(CPLPath, "frpc.exe");
+                CplPath = Path.Combine(DirectoryPath, "CPL");
+                PicturesPath = Path.Combine(CplPath, "Pictures");
+                IniPath = Path.Combine(CplPath, "Ini");
+                LogfilePath = Path.Combine(CplPath, "Debug.logs");
+                FrpExePath = Path.Combine(CplPath, "frpc.exe");
                 new Temp();
             }
 
             internal class Temp
             {
-                public static string temp_api_tunnel;
-                public static string temp_api_update;
-                public static string temp_api_login;
-                public static string temp_api_user;
-                public static string temp_user_image;
+                public static string TempApiTunnel;
+                public static string TempApiLogin;
+                public static string TempApiUser;
+                public static string TempUserImage;
 
                 public Temp()
                 {
-                    temp_api_tunnel = Path.GetTempFileName();
-                    temp_api_update = Path.GetTempFileName();
-                    temp_api_login = Path.GetTempFileName();
-                    temp_api_user = Path.GetTempFileName();
-                    temp_user_image = Path.GetTempFileName();
+                    TempApiTunnel = Path.GetTempFileName();
+                    TempApiLogin = Path.GetTempFileName();
+                    TempApiUser = Path.GetTempFileName();
+                    TempUserImage = Path.GetTempFileName();
                 }
             }
         }
 
         internal class User
         {
-            public static string username;
-            public static string password;
-            public static string usertoken;
+            public static string Username;
+            public static string Password;
+            public static string Usertoken;
 
             public User()
             {
-                var data = new FileIniDataParser().ReadFile(Paths.setupIniPath);
-                username = data["ChmlFrp_Professional_Launcher Setup"]["Username"];
-                password = data["ChmlFrp_Professional_Launcher Setup"]["Password"];
-                usertoken = data["ChmlFrp_Professional_Launcher Setup"]["Token"];
-                //string jsonContent = File.ReadAllText(Paths.temp_api_path);
-                //var jsonObject = JObject.Parse(jsonContent);
+                var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\\ChmlFrp");
+                if (key == null)
+                {
+                    Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\ChmlFrp");
+                    return;
+                }
+
+                Username = key.GetValue("username")?.ToString();
+                Password = key.GetValue("password")?.ToString();
+                Usertoken = key.GetValue("usertoken")?.ToString();
             }
         }
 
@@ -155,10 +119,10 @@ namespace ChmlFrp_Professional_Launcher
                 }
                 catch
                 {
-                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?path={path}&url={url}");
+                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
                     return false;
                 }
-                Reminders.LogsOutputting($"下载成功：已下载?path={path}");
+
                 return true;
             }
 
@@ -178,46 +142,45 @@ namespace ChmlFrp_Professional_Launcher
                 }
                 catch
                 {
-                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?path={path}&url={url}");
+                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
                     return false;
                 }
-                Reminders.LogsOutputting($"下载成功：已下载?path={path}");
+
                 return true;
             }
 
-            public static bool GetAPItoLogin(bool Remind)
+            public static bool GetApItoLogin(bool remind = true)
             {
                 new User();
 
-                if (
-                    Download(
-                        $"https://cf-v2.uapis.cn/login?username={User.username}&password={User.password}",
-                        Paths.Temp.temp_api_login
-                    )
-                )
+                if (Download(
+                        $"https://cf-v2.uapis.cn/login?username={User.Username}&password={User.Password}",
+                        Paths.Temp.TempApiLogin
+                    ))
                 {
-                    string msg = JObject
-                        .Parse(File.ReadAllText(Paths.Temp.temp_api_login))["msg"]
+                    var msg = JObject
+                        .Parse(File.ReadAllText(Paths.Temp.TempApiLogin))["msg"]
                         ?.ToString();
                     Reminders.LogsOutputting("API提醒：" + msg);
                     if (msg == "登录成功")
                     {
-                        SignInBool = true;
-                        if (Remind)
+                        if (remind)
                             Reminders.Reminder_Box_Show(msg);
+                        SignInBool = true;
                         return true;
                     }
                     else
                     {
-                        if (Remind)
+                        if (remind)
                             Reminders.Reminder_Box_Show(msg, "red");
                     }
                 }
                 else
                 {
-                    if (Remind)
+                    if (remind)
                         Reminders.Reminder_Box_Show("网络错误", "red");
                 }
+
                 SignInBool = false;
                 return false;
             }
@@ -225,24 +188,15 @@ namespace ChmlFrp_Professional_Launcher
 
         internal static class Reminders
         {
-            private static int i = 1;
-            private static Reminder_Box_Show Reminder_Box_Show_Window = new();
-            private static Reminder_Interface_Show Reminder_Interface_Show_Window = new();
-            public static Reminder_Download_Show Reminder_Download_Show_Window = new();
+            private static readonly ReminderBoxShow ReminderBoxShowWindow = new();
+            private static readonly ReminderInterfaceShow ReminderInterfaceShowWindow = new();
+            private static readonly ReminderDownloadShow ReminderDownloadShowWindow = new();
 
             public static void LogsOutputting(string logEntry)
             {
-                switch (i)
-                {
-                    case 1:
-                        //清空文件
-                        File.WriteAllText(Paths.logfilePath, string.Empty);
-                        i++;
-                        break;
-                }
                 logEntry = $"[{DateTime.Now}] " + logEntry;
                 Console.WriteLine(logEntry);
-                File.AppendAllText(Paths.logfilePath, logEntry + Environment.NewLine);
+                File.AppendAllText(Paths.LogfilePath, logEntry + Environment.NewLine);
             }
 
             public static void Reminder_Box_Show(string message, string color = "green")
@@ -253,40 +207,39 @@ namespace ChmlFrp_Professional_Launcher
                     return;
                 }
 
-                if (Reminder_Box_Show_Window.Visibility == Visibility.Collapsed)
-                {
-                    Reminder_Box_Show_Window.Visibility = Visibility.Visible;
-                }
+                if (ReminderBoxShowWindow.Visibility == Visibility.Collapsed)
+                    ReminderBoxShowWindow.Visibility = Visibility.Visible;
 
                 if (color == "green")
                 {
-                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
+                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
                         Colors.LimeGreen
                     );
                 }
                 else if (color == "blue")
                 {
-                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
+                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
                         Colors.DodgerBlue
                     );
                 }
                 else if (color == "red")
                 {
-                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
+                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
                         Colors.Red
                     );
                 }
                 else if (color == "yellow")
                 {
-                    Reminder_Box_Show_Window.RemidingTextBlock.Foreground = new SolidColorBrush(
+                    ReminderBoxShowWindow.RemidingTextBlock.Foreground = new SolidColorBrush(
                         Colors.Green
                     );
-                    Reminder_Box_Show_Window.RemindersBorder.Background = new SolidColorBrush(
+                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
                         Colors.Yellow
                     );
                 }
-                Reminder_Box_Show_Window.RemidingTextBlock.Text = message;
-                MainWindowClass.RemindersNavigationTwo.Navigate(Reminder_Box_Show_Window);
+
+                ReminderBoxShowWindow.RemidingTextBlock.Text = message;
+                MainWindowClass.RemindersNavigationTwo.Navigate(ReminderBoxShowWindow);
             }
 
             public static void Reminder_Interface_Show(
@@ -302,48 +255,43 @@ namespace ChmlFrp_Professional_Launcher
                     return;
                 }
 
-                if (Reminder_Interface_Show_Window.Visibility == Visibility.Collapsed)
-                {
-                    Reminder_Interface_Show_Window.Visibility = Visibility.Visible;
-                }
+                if (ReminderInterfaceShowWindow.Visibility == Visibility.Collapsed)
+                    ReminderInterfaceShowWindow.Visibility = Visibility.Visible;
 
-                Reminder_Interface_Show_Window.Yes_CornerButten.IsSelected = true;
+                ReminderInterfaceShowWindow.Yes_CornerButten.IsSelected = true;
 
                 if (isUpdate)
                 {
-                    Reminder_Interface_Show_Window.Yes_CornerButten.Content = "更新";
-                    Reminder_Interface_Show_Window.Yes_CornerButten.Click += async (sender, e) =>
+                    ReminderInterfaceShowWindow.Yes_CornerButten.Content = "更新";
+                    ReminderInterfaceShowWindow.Yes_CornerButten.Click += async (_, _) =>
                     {
-                        Reminder_Interface_Show_Window.Visibility = Visibility.Collapsed;
+                        ReminderInterfaceShowWindow.Visibility = Visibility.Collapsed;
 
                         await Task.Delay(1000);
 
-                        string EXE = Path.Combine(
-                            Paths.CPLPath,
+                        var exe = Path.Combine(
+                            Paths.CplPath,
                             "ChmlFrp_Professional_Launcher.exe"
                         );
 
-                        if (Downloadfiles.Download(url, EXE))
+                        if (Downloadfiles.Download(url, exe))
                         {
-                            Reminders.Reminder_Box_Show("下载成功");
-                            Reminders.LogsOutputting("下载成功");
+                            Reminder_Box_Show("下载成功");
+                            LogsOutputting("下载成功");
 
-                            string batchFilePath = Path.Combine(Paths.CPLPath, "update.bat");
-
-                            // 创建批处理文件内容
-                            string batchContent =
+                            var batchFilePath = Path.Combine(Paths.CplPath, "update.bat");
+                            var processPath = Process.GetCurrentProcess().MainModule?.FileName;
+                            var batchContent =
                                 $@"
-        @echo off
-        timeout /t 3 /nobreak
-        move /y ""{EXE}"" ""{Process.GetCurrentProcess().MainModule.FileName}""
-        start """" ""{Process.GetCurrentProcess().MainModule.FileName}""
-        exit
-        ";
+                                @echo off
+                                timeout /t 3 /nobreak
+                                move /y ""{exe}"" ""{processPath}""
+                                start """" ""{processPath}""
+                                exit
+                                ";
 
-                            // 写入批处理文件
                             File.WriteAllText(batchFilePath, batchContent);
 
-                            // 启动批处理文件
                             var process = new Process();
                             ProcessStartInfo processInfo = new(
                                 "cmd.exe",
@@ -351,82 +299,167 @@ namespace ChmlFrp_Professional_Launcher
                             )
                             {
                                 UseShellExecute = true,
-                                CreateNoWindow = true,
+                                CreateNoWindow = true
                             };
                             process.StartInfo = processInfo;
                             process.Start();
 
-                            // 关闭当前应用程序
                             MainWindowClass.Close();
                         }
                         else
                         {
-                            Reminders.Reminder_Box_Show("更新失败", "red");
-                            Reminders.LogsOutputting("更新失败");
-                            Reminder_Interface_Show_Window.Visibility = Visibility.Collapsed;
+                            Reminder_Box_Show("更新失败", "red");
+                            LogsOutputting("更新失败");
+                            ReminderInterfaceShowWindow.Visibility = Visibility.Collapsed;
                         }
                     };
                 }
                 else
                 {
-                    Reminder_Interface_Show_Window.Yes_CornerButten.Click += (sender, e) =>
+                    ReminderInterfaceShowWindow.Yes_CornerButten.Click += (_, _) =>
                     {
-                        Reminder_Interface_Show_Window.Visibility = Visibility.Collapsed;
+                        ReminderInterfaceShowWindow.Visibility = Visibility.Collapsed;
                     };
                 }
 
-                Reminder_Interface_Show_Window.SubjectTextBlock.Text = subject;
-                Reminder_Interface_Show_Window.TextTextBlock.Text = message;
-                MainWindowClass.RemindersNavigation.Navigate(Reminder_Interface_Show_Window);
+                ReminderInterfaceShowWindow.SubjectTextBlock.Text = subject;
+                ReminderInterfaceShowWindow.TextTextBlock.Text = message;
+                MainWindowClass.RemindersNavigation.Navigate(ReminderInterfaceShowWindow);
             }
 
             public static void Reminder_Download_Show()
             {
-                if (Reminder_Download_Show_Window.Visibility == Visibility.Collapsed)
-                {
-                    Reminder_Download_Show_Window.Visibility = Visibility.Visible;
-                }
+                if (ReminderDownloadShowWindow.Visibility == Visibility.Collapsed)
+                    ReminderDownloadShowWindow.Visibility = Visibility.Visible;
 
-                MainWindowClass.RemindersNavigation.Navigate(Reminder_Download_Show_Window);
+                MainWindowClass.RemindersNavigation.Navigate(ReminderDownloadShowWindow);
             }
         }
 
-        public static async void Update()
+        internal static class Initialize
         {
-            Reminders.Reminder_Box_Show("开始更新", "blue");
-            Reminders.LogsOutputting("开始更新");
-
-            if (
-                await Downloadfiles.Downloadasync(
-                    "https://cpl.chmlfrp.com/update/update.json",
-                    Paths.Temp.temp_api_login
-                )
-            )
+            public static void InitializeNext()
             {
-                var JObject1 = JObject.Parse(File.ReadAllText(Paths.Temp.temp_api_login));
-                string version = JObject1["version"]?.ToString();
-                string subject = JObject1["subject"]?.ToString();
-                string text = JObject1["text"]?.ToString();
-                string url = JObject1["url"]?.ToString();
+                IsUpdate();
+                SetImage();
+                IsAprilFoolsDay();
+                if (!File.Exists(Paths.FrpExePath)) Reminders.Reminder_Download_Show();
+            }
 
-                if (version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
+            public static void InitializeFirst()
+            {
+                new Paths();
+
+                // 检测是否有两个ChmlFrp Professional Launcher进程
+                if (IsProcess(Process.GetCurrentProcess().ProcessName))
                 {
-                    Reminders.Reminder_Box_Show("已是最新版本");
-                    Reminders.LogsOutputting("已是最新版本");
+                    MessageBox.Show(
+                        "已存在进程，请关闭当前进程。",
+                        "请关闭当前进程",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Stop
+                    );
+
+                    MainWindowClass.Close();
                     return;
+                }
+
+                try
+                {
+                    //检测是否有相关配置文件
+                    if (!File.Exists(Paths.CplPath))
+                        Directory.CreateDirectory(Paths.CplPath);
+                    if (!File.Exists(Paths.PicturesPath))
+                        Directory.CreateDirectory(Paths.PicturesPath);
+                    if (File.Exists(Path.Combine(Paths.CplPath, "update.bat")))
+                        File.Delete(Path.Combine(Paths.CplPath, "update.bat"));
+                    if (!File.Exists(Paths.IniPath))
+                        Directory.CreateDirectory(Paths.IniPath);
+                    if (!File.Exists(Paths.LogfilePath))
+                        File.WriteAllText(Paths.LogfilePath, string.Empty);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        "配置文件创建失败，请检查权限。",
+                        "配置文件创建失败",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+
+                    MainWindowClass.Close();
+                }
+            }
+
+            private static async void IsUpdate()
+            {
+                Reminders.Reminder_Box_Show("开始更新", "blue");
+                Reminders.LogsOutputting("开始更新");
+
+                if (
+                    await Downloadfiles.Downloadasync(
+                        "https://cpl.chmlfrp.com/update/update.json",
+                        Paths.Temp.TempApiLogin
+                    )
+                )
+                {
+                    var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
+                    var version = jObject["version"]?.ToString();
+
+                    if (version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
+                    {
+                        Reminders.Reminder_Box_Show("已是最新版本");
+                        Reminders.LogsOutputting("已是最新版本");
+                    }
+                    else
+                    {
+                        Reminders.Reminder_Box_Show("发现新版本", "blue");
+                        var subject = jObject["subject"]?.ToString();
+                        var text = jObject["text"]?.ToString();
+                        var url = jObject["url"]?.ToString();
+                        await Task.Delay(2000);
+                        Reminders.Reminder_Interface_Show(subject, text, true, url);
+                    }
                 }
                 else
                 {
-                    Reminders.Reminder_Box_Show("发现新版本", "blue");
-
-                    await Task.Delay(2000);
-                    Reminders.Reminder_Interface_Show(subject, text, true, url);
+                    Reminders.Reminder_Box_Show("更新失败", "red");
+                    Reminders.LogsOutputting("更新失败");
                 }
             }
-            else
+
+            private static void IsAprilFoolsDay()
             {
-                Reminders.Reminder_Box_Show("更新失败", "red");
-                Reminders.LogsOutputting("更新失败");
+                if (DateTime.Today is not { Month: 4, Day: 1 }) return;
+                var resourceDictionary = new ResourceDictionary
+                {
+                    Source = new Uri("pack://application:,,,/ChmlFrp Professional Launcher;component/Themes/Theme.xaml")
+                };
+                if (resourceDictionary["ThemeColor"] is SolidColorBrush themeColorBrush)
+                    themeColorBrush.Color = Colors.LightGreen;
+                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+                MainWindowClass.BlankPage.TextBlock.Text = "愚人节快乐";
+                MainWindowClass.BlankPage.TextBlock.Foreground = new SolidColorBrush(Colors.LightGreen);
+            }
+
+            private static void SetImage()
+            {
+                var imageFiles = Directory
+                    .GetFiles(Paths.PicturesPath, "*.*")
+                    .Where(file =>
+                        file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                        || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToArray();
+
+                if (imageFiles.Length <= 0) return;
+
+                Random random = new();
+                var randomImage = imageFiles[random.Next(imageFiles.Length)];
+                MainWindowClass.Imagewallpaper.ImageSource = new BitmapImage(
+                    new Uri(randomImage, UriKind.RelativeOrAbsolute)
+                );
+                MainWindowClass.Imagewallpaper.Stretch = Stretch.UniformToFill;
             }
         }
     }

@@ -1,109 +1,110 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ChmlFrp_Professional_Launcher.Styles;
+using Newtonsoft.Json.Linq;
 using static ChmlFrp_Professional_Launcher.MainClass;
 
-namespace ChmlFrp_Professional_Launcher.Pages.ChmlFrpLoginPages
+namespace ChmlFrp_Professional_Launcher.Pages.ChmlFrpPages.ChmlFrpLoginedPages
 {
     /// <summary>
     /// TMAPage.xaml 的交互逻辑
     /// </summary>
-    public partial class TMAPage : Page
+    public partial class TmaPage
     {
-        public TMAPage()
+        public TmaPage()
         {
             InitializeComponent();
             new User();
             InitializeApps();
         }
 
-        public async void InitializeApps()
+        private async void InitializeApps()
         {
-            if (
-                await Downloadfiles.Downloadasync(
-                    "http://cf-v2.uapis.cn/tunnel?token=" + User.usertoken,
-                    Paths.Temp.temp_api_tunnel
-                )
-            )
-            {
-                var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.temp_api_tunnel));
-                if (jsonObject["msg"]?.ToString() == "获取隧道数据成功")
+            if (!await Downloadfiles.Downloadasync(
+                    "http://cf-v2.uapis.cn/tunnel?token=" + User.Usertoken,
+                    Paths.Temp.TempApiTunnel
+                )) return;
+
+            var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiTunnel));
+
+            if (jsonObject["msg"]?.ToString() != "获取隧道数据成功") return;
+            var index = 1;
+            PagesClass.LaunchPage.comboBox.Items.Clear();
+            foreach (var tunnel in jsonObject["data"]!)
+                if (index != 6)
                 {
-                    int index = 1;
-                    foreach (var tunnel in jsonObject["data"])
+                    var tunnelid = tunnel["id"]?.ToString();
+                    var tunneltype = tunnel["type"]?.ToString();
+                    var tunnelip = tunnel["ip"]?.ToString();
+                    var tunnelnport = tunnel["nport"]?.ToString();
+                    var tunneldorp = tunnel["dorp"]?.ToString();
+                    var tunnelname = tunnel["name"]?.ToString();
+                    var tunnelstate = tunnel["state"]!.Value<bool>();
+
+                    if (tunnelstate) PagesClass.LaunchPage.comboBox.Items.Add(tunnelname);
+
+                    var border = new Border
                     {
-                        if (index != 6)
-                        {
-                            string tunnelid = tunnel["id"].ToString();
-                            string tunneltype = tunnel["type"].ToString();
-                            string tunnelip = tunnel["ip"].ToString();
-                            string tunnelnport = tunnel["nport"].ToString();
-                            string tunneldorp = tunnel["dorp"].ToString();
+                        Background = (Brush)FindResource("WhiteColorLight"),
+                        CornerRadius = new CornerRadius(6),
+                        Margin = new Thickness(2),
+                        Opacity = 0.8
+                    };
+                    var tunnelTextBox = new CornerTunnelTextBox
+                    {
+                        Margin = new Thickness(3),
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        IsTrue = tunnelstate
+                    };
+                    var tunnelTextBlock1 = new CornerTextBlock
+                    {
+                        Margin = new Thickness(5),
+                        Text = tunnelname,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top
+                    };
+                    var tunnelTextBlock2 = new CornerTextBlock
+                    {
+                        Margin = new Thickness(5),
+                        Text = $"#{tunnelid}",
+                        Foreground = new SolidColorBrush(Colors.Gray),
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Bottom
+                    };
+                    var tunnelTextBlock3 = new CornerTextBlock
+                    {
+                        Margin = new Thickness(5),
+                        Text = $"连接地址: {tunnelip}:{tunneldorp}",
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
 
-                            var border = new Border
-                            {
-                                Background = (Brush)FindResource("WhiteColorLiglt"),
-                                CornerRadius = new CornerRadius(6),
-                                Margin = new Thickness(2),
-                                Opacity = 0.8,
-                            };
-                            var tunnelTextBox = new CornerTunnelTextBox
-                            {
-                                Margin = new Thickness(3),
-                                HorizontalAlignment = HorizontalAlignment.Right,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                IsTrue = tunnel["state"].Value<bool>(),
-                            };
-                            var tunnelTextBlock1 = new CornerTextBlock
-                            {
-                                Margin = new Thickness(5),
-                                Text = tunnel["name"].ToString(),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                            };
-                            var tunnelTextBlock2 = new CornerTextBlock
-                            {
-                                Margin = new Thickness(5),
-                                Text = $"#{tunnelid}",
-                                Foreground = new SolidColorBrush(Colors.Gray),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Bottom,
-                            };
-                            var tunnelTextBlock3 = new CornerTextBlock
-                            {
-                                Margin = new Thickness(5),
-                                Text = $"连接地址: {tunnelip}:{tunneldorp}",
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Center,
-                            };
+                    tunnelTextBlock3.PreviewMouseLeftButtonDown += (sender, e) =>
+                        CopyToClipboard($"{tunnelip}:{tunneldorp}");
 
-                            tunnelTextBlock3.PreviewMouseLeftButtonDown += (sender, e) => CopyToClipboard($"{tunnelip}:{tunneldorp}");
-
-                            var grid = new Grid();
-                            grid.Children.Add(tunnelTextBox);
-                            grid.Children.Add(tunnelTextBlock1);
-                            grid.Children.Add(tunnelTextBlock2);
-                            grid.Children.Add(tunnelTextBlock3);
-                            border.Child = grid;
-                            Grid.SetRow(border, (index - 1) / 2);
-                            Grid.SetColumn(border, (index - 1) % 2);
-                            MainGrid.Children.Add(border);
-                            index++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
+                    var grid = new Grid();
+                    grid.Children.Add(tunnelTextBox);
+                    grid.Children.Add(tunnelTextBlock1);
+                    grid.Children.Add(tunnelTextBlock2);
+                    grid.Children.Add(tunnelTextBlock3);
+                    border.Child = grid;
+                    Grid.SetRow(border, (index - 1) / 2);
+                    Grid.SetColumn(border, (index - 1) % 2);
+                    MainGrid.Children.Add(border);
+                    index++;
                 }
-            }
+                else
+                {
+                    break;
+                }
         }
 
-        private void CopyToClipboard(string text)
+        private static void CopyToClipboard(string text)
         {
             Clipboard.SetText(text);
             Reminders.Reminder_Box_Show("连接地址已复制到剪贴板");

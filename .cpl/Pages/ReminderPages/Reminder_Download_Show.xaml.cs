@@ -1,17 +1,16 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using static ChmlFrp_Professional_Launcher.MainClass;
 
-namespace ChmlFrp_Professional_Launcher.Pages
+namespace ChmlFrp_Professional_Launcher.Pages.ReminderPages
 {
     /// <summary>
     /// Reminder_Download_Show.xaml 的交互逻辑
     /// </summary>
-    public partial class Reminder_Download_Show : Page
+    public partial class ReminderDownloadShow
     {
-        public Reminder_Download_Show()
+        public ReminderDownloadShow()
         {
             InitializeComponent();
         }
@@ -31,10 +30,10 @@ namespace ChmlFrp_Professional_Launcher.Pages
                 return;
             }
 
-            bool isX86Checked = X86_Butten.IsChecked == true;
-            bool isAMDChecked = AMD_Butten.IsChecked == true;
+            var isX86Checked = X86_Butten.IsChecked == true;
+            var isAmdChecked = AMD_Butten.IsChecked == true;
 
-            if (!isX86Checked && !isAMDChecked)
+            if (!isX86Checked && !isAmdChecked)
             {
                 Reminders.Reminder_Box_Show("选项未选择", "red");
                 return;
@@ -43,18 +42,18 @@ namespace ChmlFrp_Professional_Launcher.Pages
             Reminders.Reminder_Box_Show("正在下载中...", "green");
             PorgressBar.IsIndeterminate = true;
             i++;
-            bool downloadSuccess = await Task.Run(async () =>
+            var downloadSuccess = await Task.Run(async () =>
             {
                 if (isX86Checked)
                     return await Downloadfiles.Downloadasync(
                         "https://cpl.chmlfrp.com/frp/frpc_86.exe",
-                        Paths.frpExePath
+                        Paths.FrpExePath
                     );
 
-                if (isAMDChecked)
+                if (isAmdChecked)
                     return await Downloadfiles.Downloadasync(
                         "https://cpl.chmlfrp.com/frp/frpc_amd.exe",
-                        Paths.frpExePath
+                        Paths.FrpExePath
                     );
 
                 return false;

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ChmlFrp_Professional_Launcher.Pages
+namespace ChmlFrp_Professional_Launcher.Pages.SettingPages
 {
     /// <summary>
     /// SettingHomePage.xaml 的交互逻辑

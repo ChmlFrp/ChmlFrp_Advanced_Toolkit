@@ -6,41 +6,18 @@ using System.Windows.Controls;
 using Newtonsoft.Json.Linq;
 using static ChmlFrp_Professional_Launcher.MainClass;
 
-namespace ChmlFrp_Professional_Launcher.Pages
+namespace ChmlFrp_Professional_Launcher.Pages.LaunchPages
 {
     public partial class LaunchPage : Page
     {
-        private Process process;
+        private Process _process;
 
         public LaunchPage()
         {
             InitializeComponent();
-            new User();
-
-            if (SignInBool)
-            {
-                if (
-                    Downloadfiles.Download(
-                        "http://cf-v2.uapis.cn/tunnel?token=" + User.usertoken,
-                        Paths.Temp.temp_api_tunnel
-                    )
-                )
-                {
-                    var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.temp_api_tunnel));
-
-                    if (jsonObject["state"]?.ToString() == "fail")
-                    {
-                        return;
-                    }
-                    foreach (var tunnel in jsonObject["data"])
-                    {
-                        comboBox.Items.Add(tunnel["name"]?.ToString());
-                    }
-                }
-            }
         }
 
-        private string node;
+        private string _node;
 
         private async void Launch(object sender, RoutedEventArgs e)
         {
@@ -52,31 +29,30 @@ namespace ChmlFrp_Professional_Launcher.Pages
                 LaunchButton.Click += Launch;
                 return;
             }
-            string frpciniFilePath = Path.Combine(Paths.IniPath, $"{comboBox.Text}.ini");
+
+            var frpciniFilePath = Path.Combine(Paths.IniPath, $"{comboBox.Text}.ini");
 
             if (!File.Exists(frpciniFilePath))
             {
-                var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.temp_api_tunnel));
+                var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiTunnel));
 
-                string api_tunnel_path = Path.GetTempFileName();
+                var apiTunnelPath = Path.GetTempFileName();
 
-                foreach (var tunnel in jsonObject["data"])
-                {
-                    if (tunnel["name"].ToString() == comboBox.Text)
+                foreach (var tunnel in jsonObject["data"]!)
+                    if (tunnel["name"]?.ToString() == comboBox.Text)
                     {
-                        node = tunnel["node"].ToString();
+                        _node = tunnel["node"]?.ToString();
                         break;
                     }
-                }
 
                 if (
                     await Downloadfiles.Downloadasync(
-                        $"http://cf-v2.uapis.cn/tunnel_config?token={User.usertoken}&node={node}&tunnel_names={comboBox.Text}",
-                        api_tunnel_path
+                        $"http://cf-v2.uapis.cn/tunnel_config?token={User.Usertoken}&node={_node}&tunnel_names={comboBox.Text}",
+                        apiTunnelPath
                     )
                 )
                 {
-                    jsonObject = JObject.Parse(File.ReadAllText(api_tunnel_path));
+                    jsonObject = JObject.Parse(File.ReadAllText(apiTunnelPath));
                     File.WriteAllText(frpciniFilePath, jsonObject["data"]?.ToString());
                 }
                 else
@@ -87,23 +63,23 @@ namespace ChmlFrp_Professional_Launcher.Pages
                 }
             }
 
-            string frpclogFilePath = Path.Combine(Paths.CPLPath, "frpc.logs");
+            var frpclogFilePath = Path.Combine(Paths.CplPath, "frpc.logs");
 
-            process = new Process();
+            _process = new Process();
 
             ProcessStartInfo processInfo = new(
-                "cmd.exe",
-                $"/c {Paths.frpExePath} -c {frpciniFilePath} > {frpclogFilePath} 2>&1"
-            ) // 命令
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-            }; // 配置
-            process.StartInfo = processInfo; // 使用
+                    "cmd.exe",
+                    $"/c {Paths.FrpExePath} -c {frpciniFilePath} > {frpclogFilePath} 2>&1"
+                ) // 命令
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }; // 配置
+            _process.StartInfo = processInfo; // 使用
 
             try
             {
-                process.Start(); // 启动
+                _process.Start(); // 启动
             }
             catch (Exception ex)
             {
@@ -112,6 +88,7 @@ namespace ChmlFrp_Professional_Launcher.Pages
                 LaunchButton.Click += Launch;
                 return;
             }
+
             Reminders.Reminder_Box_Show("启动成功", "green");
             LaunchButton.Click += Launch;
         }

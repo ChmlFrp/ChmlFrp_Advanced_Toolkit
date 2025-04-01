@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 
-namespace ChmlFrp_Professional_Launcher
+namespace ChmlFrp_Professional_Launcher.Pages
 {
     public partial class StartWindow : Window
     {
@@ -14,11 +14,11 @@ namespace ChmlFrp_Professional_Launcher
 
         private void StartWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Window window = GetWindow(this);
+            var window = GetWindow(this);
             window.Topmost = true;
             window.ShowInTaskbar = false;
-            IntPtr hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
-            SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            var hWnd = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+            SetWindowPos(hWnd, HwndTopmost, 0, 0, 0, 0, SwpNomove | SwpNosize);
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -32,8 +32,8 @@ namespace ChmlFrp_Professional_Launcher
             uint uFlags
         );
 
-        private static readonly IntPtr HWND_TOPMOST = new(-1);
-        private const uint SWP_NOMOVE = 0x0002;
-        private const uint SWP_NOSIZE = 0x0001;
+        private static readonly IntPtr HwndTopmost = new(-1);
+        private const uint SwpNomove = 0x0002;
+        private const uint SwpNosize = 0x0001;
     }
 }

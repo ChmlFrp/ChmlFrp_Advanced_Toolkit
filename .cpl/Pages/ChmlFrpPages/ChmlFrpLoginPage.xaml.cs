@@ -1,29 +1,22 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using IniParser;
-using IniParser.Model;
 using Newtonsoft.Json.Linq;
 using static ChmlFrp_Professional_Launcher.MainClass;
+using Microsoft.Win32;
 
-namespace ChmlFrp_Professional_Launcher.Pages
+namespace ChmlFrp_Professional_Launcher.Pages.ChmlFrpPages
 {
     /// <summary>
     /// ChmlFrpLoginPage.xaml 的交互逻辑
     /// </summary>
-    public partial class ChmlFrpLoginPage : Page
+    public partial class ChmlFrpLoginPage
     {
-        private IniData data;
-        private FileIniDataParser parser = new();
-
         public ChmlFrpLoginPage()
         {
             InitializeComponent();
-            data = parser.ReadFile(Paths.setupIniPath);
-
-            TextBox_password.Text = User.password;
-            TextBox_Username.Text = User.username;
+            TextBox_password.Text = User.Password;
+            TextBox_Username.Text = User.Username;
         }
 
         private void Border_MouseLeftButtonDown(
@@ -34,9 +27,9 @@ namespace ChmlFrp_Professional_Launcher.Pages
             MainWindowClass.DragMove();
         }
 
-        private async void logon(object sender, RoutedEventArgs e)
+        private async void Logon(object sender, RoutedEventArgs e)
         {
-            logonButton.Click -= logon;
+            logonButton.Click -= Logon;
 
             if (
                 string.IsNullOrWhiteSpace(TextBox_Username.Text)
@@ -44,43 +37,41 @@ namespace ChmlFrp_Professional_Launcher.Pages
             )
             {
                 Reminders.Reminder_Box_Show("别输入空白字符", "red");
-                logonButton.Click += logon;
+                logonButton.Click += Logon;
                 return;
             }
 
-            data["ChmlFrp_Professional_Launcher Setup"]["Password"] = TextBox_password.Text;
-            data["ChmlFrp_Professional_Launcher Setup"]["Username"] = TextBox_Username.Text;
-            parser.WriteFile(Paths.setupIniPath, data);
+            var registryKey = Registry.CurrentUser.OpenSubKey
+                (@"SOFTWARE\\ChmlFrp", true);
 
-            if (Downloadfiles.GetAPItoLogin(true))
+            registryKey.SetValue("username", TextBox_Username.Text);
+            registryKey.SetValue("password", TextBox_password.Text);
+
+            if (Downloadfiles.GetApItoLogin(true))
             {
-                string jsonContent = System.IO.File.ReadAllText(Paths.Temp.temp_api_login);
+                var jsonContent = System.IO.File.ReadAllText(Paths.Temp.TempApiLogin);
                 var jsonObject = JObject.Parse(jsonContent);
-                data["ChmlFrp_Professional_Launcher Setup"]["Token"] = jsonObject["data"]
-                    ["usertoken"]
-                    ?.ToString();
-                parser.WriteFile(Paths.setupIniPath, data);
-
+                registryKey.SetValue("usertoken", jsonObject["data"]?["usertoken"]?.ToString());
+                new User();
                 await Task.Delay(1000);
-
-                this.Visibility = Visibility.Collapsed;
-                PagesClass.ChmlFrpHomePage = new();
-                MainWindowClass.rdChmlfrpPage_Click(null, null);
+                Visibility = Visibility.Collapsed;
+                PagesClass.ChmlFrpHomePage = new ChmlFrphomePage();
+                MainWindowClass.NavigateChmlfrpPage(null, null);
             }
 
-            logonButton.Click += logon;
+            logonButton.Click += Logon;
         }
 
-        private void exit(object sender, RoutedEventArgs e)
+        private void Exit(object sender, RoutedEventArgs e)
         {
             Visibility = Visibility.Collapsed;
             MainWindowClass.LaunchPageButton.IsChecked = true;
-            MainWindowClass.ChmlfrpPageButton.Click += MainWindowClass.rdChmlfrpPage_Click;
+            MainWindowClass.ChmlfrpPageButton.Click += MainWindowClass.NavigateChmlfrpPage;
             MainWindowClass.PagesNavigation.Navigate(PagesClass.LaunchPage);
             return;
         }
 
-        private async void signup(object sender, RoutedEventArgs e)
+        private async void Signup(object sender, RoutedEventArgs e)
         {
             Reminders.Reminder_Box_Show("跳转中...");
             await Task.Delay(500);

@@ -2,104 +2,100 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ChmlFrp_Professional_Launcher
+namespace ChmlFrp_Professional_Launcher.Styles
 {
     public class CornerIconRadioButton : RadioButton
     {
         //Data
         public object Data
         {
-            get { return GetValue(DataProperty); }
-            set { SetValue(DataProperty, value); }
+            get => GetValue(DataProperty);
+            set => SetValue(DataProperty, value);
         }
 
         public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
-            "Data",
+            nameof(Data),
             typeof(object),
             typeof(CornerIconRadioButton)
         );
     }
 
-    public class TransparentIconRadioButton : CornerIconRadioButton { }
+    public class TransparentIconRadioButton : CornerIconRadioButton
+    {
+    }
 
-    public class CornerButten : Button
+    public class CornerButton : Button
     {
         //CornerRadius
         public CornerRadius CornerRadius
         {
-            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
         }
 
         public static readonly DependencyProperty CornerRadiusProperty =
-            DependencyProperty.Register("CornerRadius", typeof(CornerRadius), typeof(CornerButten));
+            DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(CornerButton));
 
         //IsSelected
         public bool IsSelected
         {
-            get { return (bool)GetValue(IsSelectedProperty); }
-            set { SetValue(IsSelectedProperty, value); }
+            get => (bool)GetValue(IsSelectedProperty);
+            set => SetValue(IsSelectedProperty, value);
         }
 
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
-            "IsSelected",
+            nameof(IsSelected),
             typeof(bool),
-            typeof(CornerButten)
+            typeof(CornerButton)
         );
     }
 
-    public class CornerTextBox : TextBox, INotifyPropertyChanged
+    public sealed class CornerTextBox : TextBox, INotifyPropertyChanged
     {
-        private string TempText;
+        private string _tempText;
 
         public CornerTextBox()
         {
             Loaded += CornerTextBox_Loaded;
 
-            TextChanged += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(Text))
-                    Postscript = TempText;
-                else
-                    Postscript = "";
-            };
+            TextChanged += (s, e) => { Postscript = string.IsNullOrWhiteSpace(Text) ? _tempText : ""; };
         }
 
         private void CornerTextBox_Loaded(object sender, RoutedEventArgs e)
         {
-            TempText = Postscript;
+            _tempText = Postscript;
         }
 
         //CornerRadius
         public static readonly DependencyProperty CornerRadiusProperty =
             DependencyProperty.Register(
-                "CornerRadius",
+                nameof(CornerRadius),
                 typeof(CornerRadius),
                 typeof(CornerTextBox)
             );
 
         public CornerRadius CornerRadius
         {
-            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
         }
 
         //Postscript
         public static readonly DependencyProperty PostscriptProperty = DependencyProperty.Register(
-            "Postscript",
+            nameof(Postscript),
             typeof(string),
             typeof(CornerTextBox)
         );
 
         public string Postscript
         {
-            get { return (string)GetValue(PostscriptProperty); }
-            set { SetValue(PostscriptProperty, value); }
+            get => (string)GetValue(PostscriptProperty);
+            set => SetValue(PostscriptProperty, value);
         }
 
         //Text
         public new static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text",
+            nameof(Text),
             typeof(string),
             typeof(CornerTextBox),
             new PropertyMetadata(string.Empty, OnTextChanged)
@@ -107,7 +103,7 @@ namespace ChmlFrp_Professional_Launcher
 
         public new string Text
         {
-            get { return (string)GetValue(TextProperty); }
+            get => (string)GetValue(TextProperty);
             set
             {
                 SetValue(TextProperty, value);
@@ -123,7 +119,7 @@ namespace ChmlFrp_Professional_Launcher
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -134,13 +130,13 @@ namespace ChmlFrp_Professional_Launcher
         //CornerRadius
         public CornerRadius CornerRadius
         {
-            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
         }
 
         public static readonly DependencyProperty CornerRadiusProperty =
             DependencyProperty.Register(
-                "CornerRadius",
+                nameof(CornerRadius),
                 typeof(CornerRadius),
                 typeof(CornerComboBox)
             );
@@ -151,13 +147,13 @@ namespace ChmlFrp_Professional_Launcher
         //CornerRadius
         public CornerRadius CornerRadius
         {
-            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
         }
 
         public static readonly DependencyProperty CornerRadiusProperty =
             DependencyProperty.Register(
-                "CornerRadius",
+                nameof(CornerRadius),
                 typeof(CornerRadius),
                 typeof(CornerTextBlock)
             );
@@ -168,12 +164,12 @@ namespace ChmlFrp_Professional_Launcher
         //IsTrue
         public bool IsTrue
         {
-            get { return (bool)GetValue(IsTrueProperty); }
-            set { SetValue(IsTrueProperty, value); }
+            get => (bool)GetValue(IsTrueProperty);
+            set => SetValue(IsTrueProperty, value);
         }
 
         public static readonly DependencyProperty IsTrueProperty = DependencyProperty.Register(
-            "IsTrue",
+            nameof(IsTrue),
             typeof(bool),
             typeof(CornerTunnelTextBox)
         );

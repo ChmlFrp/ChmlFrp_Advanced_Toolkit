@@ -1,23 +1,21 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using static ChmlFrp_Professional_Launcher.MainClass;
 
-namespace ChmlFrp_Professional_Launcher.Pages
+namespace ChmlFrp_Professional_Launcher.Pages.ReminderPages
 {
     /// <summary>
     /// Reminder_Interface_Show.xaml 的交互逻辑
     /// </summary>
-    public partial class Reminder_Interface_Show : Page
+    public partial class ReminderInterfaceShow
     {
-        public Reminder_Interface_Show()
+        public ReminderInterfaceShow()
         {
             InitializeComponent();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MainWindow MainWindow = Application.Current.MainWindow as MainWindow;
-            MainWindow.DragMove();
+            MainWindowClass.DragMove();
         }
     }
 }
