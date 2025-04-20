@@ -1,81 +1,66 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-using Newtonsoft.Json.Linq;
-using static ChmlFrp_Professional_Launcher.MainClass;
-using Microsoft.Win32;
+﻿namespace CPL.Pages.ChmlFrpPages;
 
-namespace ChmlFrp_Professional_Launcher.Pages.ChmlFrpPages
+public partial class ChmlFrpLoginPage
 {
-    /// <summary>
-    /// ChmlFrpLoginPage.xaml 的交互逻辑
-    /// </summary>
-    public partial class ChmlFrpLoginPage
+    public ChmlFrpLoginPage()
     {
-        public ChmlFrpLoginPage()
-        {
-            InitializeComponent();
-            TextBox_password.Text = User.Password;
-            TextBox_Username.Text = User.Username;
-        }
+        InitializeComponent();
+        TextBoxPassword.Text = User.Password;
+        TextBoxUsername.Text = User.Username;
+    }
 
-        private void Border_MouseLeftButtonDown(
-            object sender,
-            System.Windows.Input.MouseButtonEventArgs e
-        )
-        {
-            MainWindowClass.DragMove();
-        }
+    private void Border_MouseLeftButtonDown(
+        object sender,
+        MouseButtonEventArgs e
+    )
+    {
+        MainWindowClass.DragMove();
+    }
 
-        private async void Logon(object sender, RoutedEventArgs e)
-        {
-            logonButton.Click -= Logon;
+    private async void Logon(object sender, RoutedEventArgs e)
+    {
+        LogonButton.Click -= Logon;
 
-            if (
-                string.IsNullOrWhiteSpace(TextBox_Username.Text)
-                || string.IsNullOrWhiteSpace(TextBox_password.Text)
-            )
+        if (!string.IsNullOrWhiteSpace(TextBoxUsername.Text)
+            && !string.IsNullOrWhiteSpace(TextBoxPassword.Text))
+        {
+            if (TextBoxPassword.Text.Length is >= 6 and < 48)
             {
-                Reminders.Reminder_Box_Show("别输入空白字符", "red");
-                logonButton.Click += Logon;
-                return;
+                if (Downloadfiles.GetApItoLogin(true, TextBoxUsername.Text, TextBoxPassword.Text))
+                {
+                    await Task.Delay(1000);
+                    Visibility = Visibility.Collapsed;
+                    PagesClass.ChmlFrpHomePage = new ChmlFrphomePage();
+                    MainWindowClass.NavigateChmlfrpPage(null, null);
+
+                    LogonButton.Click += Logon;
+                }
             }
-
-            var registryKey = Registry.CurrentUser.OpenSubKey
-                (@"SOFTWARE\\ChmlFrp", true);
-
-            registryKey.SetValue("username", TextBox_Username.Text);
-            registryKey.SetValue("password", TextBox_password.Text);
-
-            if (Downloadfiles.GetApItoLogin(true))
+            else
             {
-                var jsonContent = System.IO.File.ReadAllText(Paths.Temp.TempApiLogin);
-                var jsonObject = JObject.Parse(jsonContent);
-                registryKey.SetValue("usertoken", jsonObject["data"]?["usertoken"]?.ToString());
-                new User();
-                await Task.Delay(1000);
-                Visibility = Visibility.Collapsed;
-                PagesClass.ChmlFrpHomePage = new ChmlFrphomePage();
-                MainWindowClass.NavigateChmlfrpPage(null, null);
+                Reminders.Reminder_Box_Show("密码不符合要求", "red");
             }
-
-            logonButton.Click += Logon;
         }
-
-        private void Exit(object sender, RoutedEventArgs e)
+        else
         {
-            Visibility = Visibility.Collapsed;
-            MainWindowClass.LaunchPageButton.IsChecked = true;
-            MainWindowClass.ChmlfrpPageButton.Click += MainWindowClass.NavigateChmlfrpPage;
-            MainWindowClass.PagesNavigation.Navigate(PagesClass.LaunchPage);
-            return;
+            Reminders.Reminder_Box_Show("别输入空白字符", "red");
         }
 
-        private async void Signup(object sender, RoutedEventArgs e)
-        {
-            Reminders.Reminder_Box_Show("跳转中...");
-            await Task.Delay(500);
-            Process.Start(new ProcessStartInfo("https://preview.panel.chmlfrp.cn/sign"));
-        }
+        LogonButton.Click += Logon;
+    }
+
+    private void Exit(object sender, RoutedEventArgs e)
+    {
+        Visibility = Visibility.Collapsed;
+        MainWindowClass.LaunchPageButton.IsChecked = true;
+        MainWindowClass.ChmlfrpPageButton.Click += MainWindowClass.NavigateChmlfrpPage;
+        MainWindowClass.PagesNavigation.Navigate(PagesClass.LaunchPage);
+    }
+
+    private async void Signup(object sender, RoutedEventArgs e)
+    {
+        Reminders.Reminder_Box_Show("跳转中...");
+        await Task.Delay(500);
+        Process.Start(new ProcessStartInfo("https://preview.panel.chmlfrp.cn/sign"));
     }
 }

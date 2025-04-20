@@ -1,43 +1,35 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Threading;
+﻿namespace CPL.Pages.ReminderPages;
 
-namespace ChmlFrp_Professional_Launcher.Pages.ReminderPages
+public partial class ReminderBoxShow
 {
-    /// <summary>
-    /// Reminder_Box_Show.xaml 的交互逻辑
-    /// </summary>
-    public partial class ReminderBoxShow
+    public ReminderBoxShow()
     {
-        public ReminderBoxShow()
-        {
-            InitializeComponent();
-            IsVisibleChanged += Reminder_Box_Show_IsVisibleChanged;
-        }
+        InitializeComponent();
+        IsVisibleChanged += Reminder_Box_Show_IsVisibleChanged;
+    }
 
-        private void Reminder_Box_Show_IsVisibleChanged(
-            object sender,
-            DependencyPropertyChangedEventArgs e
-        )
-        {
-            if (Visibility == Visibility.Visible) StartTimer();
-        }
+    private void Reminder_Box_Show_IsVisibleChanged(
+        object sender,
+        DependencyPropertyChangedEventArgs e
+    )
+    {
+        if (Visibility == Visibility.Visible) StartTimer();
+    }
 
-        private void StartTimer()
+    private void StartTimer()
+    {
+        DispatcherTimer timer = new()
         {
-            DispatcherTimer timer = new()
-            {
-                Interval = TimeSpan.FromSeconds(3)
-            };
-            timer.Tick += Timer_Tick;
-            timer.Start();
-        }
+            Interval = TimeSpan.FromSeconds(3)
+        };
+        timer.Tick += Timer_Tick;
+        timer.Start();
+    }
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            var timer = (DispatcherTimer)sender;
-            timer.Stop();
-            Visibility = Visibility.Collapsed;
-        }
+    private void Timer_Tick(object sender, EventArgs e)
+    {
+        var timer = (DispatcherTimer)sender;
+        timer.Stop();
+        Visibility = Visibility.Collapsed;
     }
 }

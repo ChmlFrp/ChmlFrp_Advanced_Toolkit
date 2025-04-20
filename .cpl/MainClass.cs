@@ -1,466 +1,375 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using ChmlFrp_Professional_Launcher.Pages.ChmlFrpPages;
-using ChmlFrp_Professional_Launcher.Pages.LaunchPages;
-using ChmlFrp_Professional_Launcher.Pages.ReminderPages;
-using Newtonsoft.Json.Linq;
 using Microsoft.Win32;
-using System.Linq;
-using System.Windows.Media.Imaging;
 
-namespace ChmlFrp_Professional_Launcher
+namespace CPL;
+
+internal static class MainClass
 {
-    public partial class App
+    public static MainWindow MainWindowClass;
+
+    public static volatile bool SignInBool;
+
+    private static bool IsProcess(string name)
     {
-        static App()
+        return Process.GetProcessesByName(name).Length > 1;
+    }
+
+    internal static class PagesClass
+    {
+        public static ChmlFrphomePage ChmlFrpHomePage;
+        public static readonly LaunchPage LaunchPage = new();
+    }
+
+    public abstract class Paths
+    {
+        //定义路径
+        private static readonly string DirectoryPath = Directory.GetCurrentDirectory();
+
+        public static readonly string CplPath = Path.Combine(DirectoryPath, "CPL");
+        public static readonly string IniPath = Path.Combine(CplPath, "Ini");
+        public static readonly string FrpExePath = Path.Combine(CplPath, "frpc.exe");
+        public static readonly string PicturesPath = Path.Combine(CplPath, "Pictures");
+        public static readonly string LogfilePath = Path.Combine(CplPath, "Debug.logs");
+
+        public abstract class Temp
         {
-            MainClass.Initialize.InitializeFirst();
+            public static readonly string TempApiTunnel = Path.GetTempFileName();
+            public static readonly string TempApiLogin = Path.GetTempFileName();
+            public static readonly string TempApiUser = Path.GetTempFileName();
+            public static string TempUserImage;
         }
     }
 
-    internal static class MainClass
+    public abstract class User
     {
-        public static MainWindow MainWindowClass;
+        private static readonly RegistryKey Key =
+            Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\ChmlFrp", true);
+        public static string Username;
+        public static string Password;
+        public static string Usertoken;
 
-        internal static class PagesClass
+        public static void Load()
         {
-            public static ChmlFrphomePage ChmlFrpHomePage = new();
-            public static readonly LaunchPage LaunchPage = new();
+            Username = Key.GetValue("username")?.ToString();
+            Password = Key.GetValue("password")?.ToString();
+            Usertoken = Key.GetValue("usertoken")?.ToString();
         }
 
-        private static bool IsProcess(string name)
+        public static void Save(string username, string password, string usertoken)
         {
-            return Process.GetProcessesByName(name).Length > 1;
+            Key.SetValue("username", username);
+            Key.SetValue("password", password);
+            Key.SetValue("usertoken", usertoken);
+            Load();
         }
+    }
 
-        public static volatile bool SignInBool;
-
-        internal class Paths
+    internal static class Downloadfiles
+    {
+        public static bool Download(string url, string path)
         {
-            //定义路径
-            private static readonly string DirectoryPath = Directory.GetCurrentDirectory();
-
-            public static string IniPath;
-            public static string FrpExePath;
-            public static string CplPath;
-            public static string PicturesPath;
-            public static string LogfilePath;
-
-            public Paths()
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
             {
-                CplPath = Path.Combine(DirectoryPath, "CPL");
-                PicturesPath = Path.Combine(CplPath, "Pictures");
-                IniPath = Path.Combine(CplPath, "Ini");
-                LogfilePath = Path.Combine(CplPath, "Debug.logs");
-                FrpExePath = Path.Combine(CplPath, "frpc.exe");
-                new Temp();
-            }
-
-            internal class Temp
-            {
-                public static string TempApiTunnel;
-                public static string TempApiLogin;
-                public static string TempApiUser;
-                public static string TempUserImage;
-
-                public Temp()
-                {
-                    TempApiTunnel = Path.GetTempFileName();
-                    TempApiLogin = Path.GetTempFileName();
-                    TempApiUser = Path.GetTempFileName();
-                    TempUserImage = Path.GetTempFileName();
-                }
-            }
-        }
-
-        internal class User
-        {
-            public static string Username;
-            public static string Password;
-            public static string Usertoken;
-
-            public User()
-            {
-                var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\\ChmlFrp");
-                if (key == null)
-                {
-                    Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\ChmlFrp");
-                    return;
-                }
-
-                Username = key.GetValue("username")?.ToString();
-                Password = key.GetValue("password")?.ToString();
-                Usertoken = key.GetValue("usertoken")?.ToString();
-            }
-        }
-
-        internal static class Downloadfiles
-        {
-            public static bool Download(string url, string path)
-            {
-                if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
-                {
-                    Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
-                    return false;
-                }
-
-                try
-                {
-                    using WebClient client = new();
-                    client.Encoding = Encoding.UTF8;
-                    client.DownloadFile(new Uri(url), path);
-                }
-                catch
-                {
-                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
-                    return false;
-                }
-
-                return true;
-            }
-
-            public static async Task<bool> Downloadasync(string url, string path)
-            {
-                if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
-                {
-                    Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
-                    return false;
-                }
-
-                try
-                {
-                    using WebClient client = new();
-                    client.Encoding = Encoding.UTF8;
-                    await client.DownloadFileTaskAsync(new Uri(url), path);
-                }
-                catch
-                {
-                    Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
-                    return false;
-                }
-
-                return true;
-            }
-
-            public static bool GetApItoLogin(bool remind = true)
-            {
-                new User();
-
-                if (Download(
-                        $"https://cf-v2.uapis.cn/login?username={User.Username}&password={User.Password}",
-                        Paths.Temp.TempApiLogin
-                    ))
-                {
-                    var msg = JObject
-                        .Parse(File.ReadAllText(Paths.Temp.TempApiLogin))["msg"]
-                        ?.ToString();
-                    Reminders.LogsOutputting("API提醒：" + msg);
-                    if (msg == "登录成功")
-                    {
-                        if (remind)
-                            Reminders.Reminder_Box_Show(msg);
-                        SignInBool = true;
-                        return true;
-                    }
-                    else
-                    {
-                        if (remind)
-                            Reminders.Reminder_Box_Show(msg, "red");
-                    }
-                }
-                else
-                {
-                    if (remind)
-                        Reminders.Reminder_Box_Show("网络错误", "red");
-                }
-
-                SignInBool = false;
+                Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
                 return false;
             }
-        }
 
-        internal static class Reminders
-        {
-            private static readonly ReminderBoxShow ReminderBoxShowWindow = new();
-            private static readonly ReminderInterfaceShow ReminderInterfaceShowWindow = new();
-            private static readonly ReminderDownloadShow ReminderDownloadShowWindow = new();
-
-            public static void LogsOutputting(string logEntry)
+            try
             {
-                logEntry = $"[{DateTime.Now}] " + logEntry;
-                Console.WriteLine(logEntry);
-                File.AppendAllText(Paths.LogfilePath, logEntry + Environment.NewLine);
+                using WebClient client = new();
+                client.Encoding = Encoding.UTF8;
+                client.DownloadFile(new Uri(url), path);
+            }
+            catch
+            {
+                Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
+                return false;
             }
 
-            public static void Reminder_Box_Show(string message, string color = "green")
+            return true;
+        }
+
+        public static async Task<bool> Downloadasync(string url, string path)
+        {
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
             {
-                if (string.IsNullOrWhiteSpace(message))
-                {
-                    LogsOutputting("提醒消息不能为空或全为空格");
-                    return;
-                }
+                Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
+                return false;
+            }
 
-                if (ReminderBoxShowWindow.Visibility == Visibility.Collapsed)
-                    ReminderBoxShowWindow.Visibility = Visibility.Visible;
+            try
+            {
+                using WebClient client = new();
+                client.Encoding = Encoding.UTF8;
+                await client.DownloadFileTaskAsync(new Uri(url), path);
+            }
+            catch
+            {
+                Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
+                return false;
+            }
 
-                if (color == "green")
-                {
-                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
+            return true;
+        }
+
+        public static bool GetApItoLogin(bool remind = true, string name = "", string password = "")
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(password))
+            {
+                password = User.Password;
+                name = User.Username;
+            }
+            
+            if (!Download(
+                    $"https://cf-v2.uapis.cn/login?username={name}&password={password}",
+                    Paths.Temp.TempApiLogin
+                ))
+            {
+                if (remind) Reminders.Reminder_Box_Show("网络错误", "red");
+                return false;
+            }
+            
+            var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
+            var msg = jObject["msg"]?.ToString();
+            
+            Reminders.LogsOutputting("API提醒：" + msg);
+            if (msg != "登录成功")
+            {
+                if (remind) Reminders.Reminder_Box_Show(msg,"red");
+                return false;
+            }
+            if (remind) Reminders.Reminder_Box_Show(msg);
+
+            User.Save(name, password, jObject["data"]?["usertoken"]?.ToString());
+            SignInBool = true;
+            return true;
+        }
+    }
+
+    internal static class Reminders
+    {
+        private static readonly ReminderBoxShow Rbsw = new();
+        private static readonly ReminderInterfaceShow Risw = new();
+        private static readonly ReminderDownloadShow Rdsw = new();
+        private static bool _first = true;
+
+
+        public static void LogsOutputting(string logEntry)
+        {
+            logEntry = $"[{DateTime.Now}] " + logEntry;
+            if (_first)
+            {
+                _first = false;
+                File.WriteAllText(Paths.LogfilePath, string.Empty);
+            }
+            Console.WriteLine(logEntry);
+            File.AppendAllText(Paths.LogfilePath, logEntry + Environment.NewLine);
+        }
+
+        public static void Reminder_Box_Show(string message, string color = "green")
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                LogsOutputting("提醒消息不能为空或全为空格");
+                return;
+            }
+
+            if (Rbsw.Visibility == Visibility.Collapsed)
+                Rbsw.Visibility = Visibility.Visible;
+
+            switch (color)
+            {
+                case "green":
+                    Rbsw.RemindersBorder.Background = new SolidColorBrush(
                         Colors.LimeGreen
                     );
-                }
-                else if (color == "blue")
-                {
-                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
+                    break;
+                case "blue":
+                    Rbsw.RemindersBorder.Background = new SolidColorBrush(
                         Colors.DodgerBlue
                     );
-                }
-                else if (color == "red")
-                {
-                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
+                    break;
+                case "red":
+                    Rbsw.RemindersBorder.Background = new SolidColorBrush(
                         Colors.Red
                     );
-                }
-                else if (color == "yellow")
-                {
-                    ReminderBoxShowWindow.RemidingTextBlock.Foreground = new SolidColorBrush(
+                    break;
+                case "yellow":
+                    Rbsw.RemidingTextBlock.Foreground = new SolidColorBrush(
                         Colors.Green
                     );
-                    ReminderBoxShowWindow.RemindersBorder.Background = new SolidColorBrush(
+                    Rbsw.RemindersBorder.Background = new SolidColorBrush(
                         Colors.Yellow
                     );
-                }
-
-                ReminderBoxShowWindow.RemidingTextBlock.Text = message;
-                MainWindowClass.RemindersNavigationTwo.Navigate(ReminderBoxShowWindow);
+                    break;
             }
 
-            public static void Reminder_Interface_Show(
-                string subject,
-                string message,
-                bool isUpdate = false,
-                string url = ""
+            Rbsw.RemidingTextBlock.Text = message;
+            MainWindowClass.RemindersNavigationTwo.Navigate(Rbsw);
+        }
+
+        public static void Reminder_Interface_Show(
+            string subject,
+            string message,
+            bool isUpdate = false
+        )
+        {
+            if (string.IsNullOrWhiteSpace(subject) || string.IsNullOrWhiteSpace(message))
+            {
+                LogsOutputting("提醒消息不能为空或全为空格");
+                return;
+            }
+
+            if (Risw.Visibility == Visibility.Collapsed)
+                Risw.Visibility = Visibility.Visible;
+
+            Risw.YesCornerButten.IsSelected = true;
+
+            if (isUpdate)
+            {
+                Risw.YesCornerButten.Content = "更新";
+                Risw.YesCornerButten.Click += Risw.Update;
+            }
+            else
+            {
+                Risw.YesCornerButten.Click += Risw.Close;
+            }
+
+            Risw.SubjectTextBlock.Text = subject;
+            Risw.TextTextBlock.Text = message;
+            MainWindowClass.RemindersNavigation.Navigate(Risw);
+        }
+
+        public static void Reminder_Download_Show()
+        {
+            if (Rdsw.Visibility == Visibility.Collapsed)
+                Rdsw.Visibility = Visibility.Visible;
+
+            MainWindowClass.RemindersNavigation.Navigate(Rdsw);
+        }
+    }
+
+    internal static class Initialize
+    {
+        public static void InitializeNext()
+        {
+            IsUpdate();
+            SetImage();
+            IsAprilFoolsDay();
+            if (!File.Exists(Paths.FrpExePath)) Reminders.Reminder_Download_Show();
+        }
+
+        public static void InitializeFirst()
+        {
+            // 检测是否有两个ChmlFrp Professional Launcher进程
+            if (IsProcess(Process.GetCurrentProcess().ProcessName))
+            {
+                MessageBox.Show(
+                    "已存在进程，请关闭当前进程。",
+                    "请关闭当前进程",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Stop
+                );
+
+                MainWindowClass.Close();
+            }
+
+            try
+            {
+                User.Load();
+                //检测是否有相关配置文件
+                if (!File.Exists(Paths.CplPath))
+                    Directory.CreateDirectory(Paths.CplPath);
+                if (!File.Exists(Paths.PicturesPath))
+                    Directory.CreateDirectory(Paths.PicturesPath);
+                if (File.Exists(Path.Combine(Paths.CplPath, "update.bat")))
+                    File.Delete(Path.Combine(Paths.CplPath, "update.bat"));
+                if (!File.Exists(Paths.IniPath))
+                    Directory.CreateDirectory(Paths.IniPath);
+                if (!File.Exists(Paths.LogfilePath))
+                    File.WriteAllText(Paths.LogfilePath, string.Empty);
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "配置文件创建失败，请检查权限。",
+                    "配置文件创建失败",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+
+                MainWindowClass.Close();
+            } 
+        }
+
+        private static async void IsUpdate()
+        {
+            Reminders.Reminder_Box_Show("开始更新", "blue");
+            Reminders.LogsOutputting("开始更新");
+
+            if (
+                await Downloadfiles.Downloadasync(
+                    "https://cpl.chmlfrp.com/update/update.json",
+                    Paths.Temp.TempApiLogin
+                )
             )
             {
-                if (string.IsNullOrWhiteSpace(subject) || string.IsNullOrWhiteSpace(message))
+                var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
+                if (jObject["version"]?.ToString() == Assembly.GetExecutingAssembly().GetName().Version.ToString())
                 {
-                    LogsOutputting("提醒消息不能为空或全为空格");
-                    return;
-                }
-
-                if (ReminderInterfaceShowWindow.Visibility == Visibility.Collapsed)
-                    ReminderInterfaceShowWindow.Visibility = Visibility.Visible;
-
-                ReminderInterfaceShowWindow.Yes_CornerButten.IsSelected = true;
-
-                if (isUpdate)
-                {
-                    ReminderInterfaceShowWindow.Yes_CornerButten.Content = "更新";
-                    ReminderInterfaceShowWindow.Yes_CornerButten.Click += async (_, _) =>
-                    {
-                        ReminderInterfaceShowWindow.Visibility = Visibility.Collapsed;
-
-                        await Task.Delay(1000);
-
-                        var exe = Path.Combine(
-                            Paths.CplPath,
-                            "ChmlFrp_Professional_Launcher.exe"
-                        );
-
-                        if (Downloadfiles.Download(url, exe))
-                        {
-                            Reminder_Box_Show("下载成功");
-                            LogsOutputting("下载成功");
-
-                            var batchFilePath = Path.Combine(Paths.CplPath, "update.bat");
-                            var processPath = Process.GetCurrentProcess().MainModule?.FileName;
-                            var batchContent =
-                                $@"
-                                @echo off
-                                timeout /t 3 /nobreak
-                                move /y ""{exe}"" ""{processPath}""
-                                start """" ""{processPath}""
-                                exit
-                                ";
-
-                            File.WriteAllText(batchFilePath, batchContent);
-
-                            var process = new Process();
-                            ProcessStartInfo processInfo = new(
-                                "cmd.exe",
-                                $"/c start {batchFilePath}"
-                            )
-                            {
-                                UseShellExecute = true,
-                                CreateNoWindow = true
-                            };
-                            process.StartInfo = processInfo;
-                            process.Start();
-
-                            MainWindowClass.Close();
-                        }
-                        else
-                        {
-                            Reminder_Box_Show("更新失败", "red");
-                            LogsOutputting("更新失败");
-                            ReminderInterfaceShowWindow.Visibility = Visibility.Collapsed;
-                        }
-                    };
+                    Reminders.Reminder_Box_Show("已是最新版本");
+                    Reminders.LogsOutputting("已是最新版本");
                 }
                 else
                 {
-                    ReminderInterfaceShowWindow.Yes_CornerButten.Click += (_, _) =>
-                    {
-                        ReminderInterfaceShowWindow.Visibility = Visibility.Collapsed;
-                    };
+                    Reminders.Reminder_Box_Show("发现新版本", "blue");
+                    await Task.Delay(2000);
+                    Reminders.Reminder_Interface_Show(jObject["subject"]?.ToString(), jObject["text"]?.ToString(),
+                        true);
                 }
-
-                ReminderInterfaceShowWindow.SubjectTextBlock.Text = subject;
-                ReminderInterfaceShowWindow.TextTextBlock.Text = message;
-                MainWindowClass.RemindersNavigation.Navigate(ReminderInterfaceShowWindow);
             }
-
-            public static void Reminder_Download_Show()
+            else
             {
-                if (ReminderDownloadShowWindow.Visibility == Visibility.Collapsed)
-                    ReminderDownloadShowWindow.Visibility = Visibility.Visible;
-
-                MainWindowClass.RemindersNavigation.Navigate(ReminderDownloadShowWindow);
+                Reminders.Reminder_Box_Show("更新失败", "red");
+                Reminders.LogsOutputting("更新失败");
             }
         }
 
-        internal static class Initialize
+        private static void IsAprilFoolsDay()
         {
-            public static void InitializeNext()
+            if (DateTime.Today is not { Month: 4, Day: 1 }) return;
+            var resourceDictionary = new ResourceDictionary
             {
-                IsUpdate();
-                SetImage();
-                IsAprilFoolsDay();
-                if (!File.Exists(Paths.FrpExePath)) Reminders.Reminder_Download_Show();
-            }
+                Source = new Uri("pack://application:,,,/ChmlFrp Professional Launcher;component/Themes/Theme.xaml")
+            };
+            if (resourceDictionary["ThemeColor"] is SolidColorBrush themeColorBrush)
+                themeColorBrush.Color = Colors.LightGreen;
+            Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+            MainWindowClass.BlankPage.TextBlock.Text = "愚人节快乐";
+            MainWindowClass.BlankPage.TextBlock.Foreground = new SolidColorBrush(Colors.LightGreen);
+        }
 
-            public static void InitializeFirst()
-            {
-                new Paths();
-
-                // 检测是否有两个ChmlFrp Professional Launcher进程
-                if (IsProcess(Process.GetCurrentProcess().ProcessName))
-                {
-                    MessageBox.Show(
-                        "已存在进程，请关闭当前进程。",
-                        "请关闭当前进程",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Stop
-                    );
-
-                    MainWindowClass.Close();
-                    return;
-                }
-
-                try
-                {
-                    //检测是否有相关配置文件
-                    if (!File.Exists(Paths.CplPath))
-                        Directory.CreateDirectory(Paths.CplPath);
-                    if (!File.Exists(Paths.PicturesPath))
-                        Directory.CreateDirectory(Paths.PicturesPath);
-                    if (File.Exists(Path.Combine(Paths.CplPath, "update.bat")))
-                        File.Delete(Path.Combine(Paths.CplPath, "update.bat"));
-                    if (!File.Exists(Paths.IniPath))
-                        Directory.CreateDirectory(Paths.IniPath);
-                    if (!File.Exists(Paths.LogfilePath))
-                        File.WriteAllText(Paths.LogfilePath, string.Empty);
-                }
-                catch
-                {
-                    MessageBox.Show(
-                        "配置文件创建失败，请检查权限。",
-                        "配置文件创建失败",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error
-                    );
-
-                    MainWindowClass.Close();
-                }
-            }
-
-            private static async void IsUpdate()
-            {
-                Reminders.Reminder_Box_Show("开始更新", "blue");
-                Reminders.LogsOutputting("开始更新");
-
-                if (
-                    await Downloadfiles.Downloadasync(
-                        "https://cpl.chmlfrp.com/update/update.json",
-                        Paths.Temp.TempApiLogin
-                    )
+        private static void SetImage()
+        {
+            var imageFiles = Directory
+                .GetFiles(Paths.PicturesPath, "*.*")
+                .Where(file =>
+                    file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
                 )
-                {
-                    var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
-                    var version = jObject["version"]?.ToString();
+                .ToArray();
 
-                    if (version == Assembly.GetExecutingAssembly().GetName().Version.ToString())
-                    {
-                        Reminders.Reminder_Box_Show("已是最新版本");
-                        Reminders.LogsOutputting("已是最新版本");
-                    }
-                    else
-                    {
-                        Reminders.Reminder_Box_Show("发现新版本", "blue");
-                        var subject = jObject["subject"]?.ToString();
-                        var text = jObject["text"]?.ToString();
-                        var url = jObject["url"]?.ToString();
-                        await Task.Delay(2000);
-                        Reminders.Reminder_Interface_Show(subject, text, true, url);
-                    }
-                }
-                else
-                {
-                    Reminders.Reminder_Box_Show("更新失败", "red");
-                    Reminders.LogsOutputting("更新失败");
-                }
-            }
+            if (imageFiles.Length <= 0) return;
 
-            private static void IsAprilFoolsDay()
-            {
-                if (DateTime.Today is not { Month: 4, Day: 1 }) return;
-                var resourceDictionary = new ResourceDictionary
-                {
-                    Source = new Uri("pack://application:,,,/ChmlFrp Professional Launcher;component/Themes/Theme.xaml")
-                };
-                if (resourceDictionary["ThemeColor"] is SolidColorBrush themeColorBrush)
-                    themeColorBrush.Color = Colors.LightGreen;
-                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-                MainWindowClass.BlankPage.TextBlock.Text = "愚人节快乐";
-                MainWindowClass.BlankPage.TextBlock.Foreground = new SolidColorBrush(Colors.LightGreen);
-            }
-
-            private static void SetImage()
-            {
-                var imageFiles = Directory
-                    .GetFiles(Paths.PicturesPath, "*.*")
-                    .Where(file =>
-                        file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-                        || file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
-                    )
-                    .ToArray();
-
-                if (imageFiles.Length <= 0) return;
-
-                Random random = new();
-                var randomImage = imageFiles[random.Next(imageFiles.Length)];
-                MainWindowClass.Imagewallpaper.ImageSource = new BitmapImage(
-                    new Uri(randomImage, UriKind.RelativeOrAbsolute)
-                );
-                MainWindowClass.Imagewallpaper.Stretch = Stretch.UniformToFill;
-            }
+            Random random = new();
+            var randomImage = imageFiles[random.Next(imageFiles.Length)];
+            MainWindowClass.Imagewallpaper.ImageSource = new BitmapImage(
+                new Uri(randomImage, UriKind.RelativeOrAbsolute)
+            );
+            MainWindowClass.Imagewallpaper.Stretch = Stretch.UniformToFill;
         }
     }
 }

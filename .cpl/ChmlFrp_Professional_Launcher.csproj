@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <UseWPF>true</UseWPF>
-        <LangVersion>9</LangVersion>
         <OutputType>WinExe</OutputType>
-        <FileVersion>0.0.1.1</FileVersion>
+        <LangVersion>latest</LangVersion>
+        <FileVersion>0.0.1.3</FileVersion>
         <TargetFramework>net48</TargetFramework>
         <AssemblyVersion>0.0.1.0</AssemblyVersion>
         <ApplicationIcon>Icons\logo.ico</ApplicationIcon>
@@ -16,4 +16,5 @@
         <PackageReference Include="Costura.Fody" Version="6.0.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
+
 </Project>

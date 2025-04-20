@@ -1,77 +1,68 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using static ChmlFrp_Professional_Launcher.MainClass;
+﻿namespace CPL.Pages.ReminderPages;
 
-namespace ChmlFrp_Professional_Launcher.Pages.ReminderPages
+public partial class ReminderDownloadShow
 {
-    /// <summary>
-    /// Reminder_Download_Show.xaml 的交互逻辑
-    /// </summary>
-    public partial class ReminderDownloadShow
+    private int _i;
+
+    public ReminderDownloadShow()
     {
-        public ReminderDownloadShow()
+        InitializeComponent();
+    }
+
+    private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        MainWindowClass.DragMove();
+    }
+
+    private async void Download_Button_Click(object sender, RoutedEventArgs e)
+    {
+        if (_i == 1)
         {
-            InitializeComponent();
+            Reminders.Reminder_Box_Show("请勿重复点击", "red");
+            return;
         }
 
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        var isX86Checked = X86Butten.IsChecked == true;
+        var isAmdChecked = AmdButten.IsChecked == true;
+
+        if (!isX86Checked && !isAmdChecked)
         {
-            MainWindowClass.DragMove();
+            Reminders.Reminder_Box_Show("选项未选择", "red");
+            return;
         }
 
-        private int i;
-
-        private async void Download_Button_Click(object sender, RoutedEventArgs e)
+        Reminders.Reminder_Box_Show("正在下载中...");
+        PorgressBar.IsIndeterminate = true;
+        _i++;
+        var downloadSuccess = await Task.Run(async () =>
         {
-            if (i == 1)
-            {
-                Reminders.Reminder_Box_Show("请勿重复点击", "red");
-                return;
-            }
+            if (isX86Checked)
+                return await Downloadfiles.Downloadasync(
+                    "https://cpl.chmlfrp.com/frp/frpc_86.exe",
+                    Paths.FrpExePath
+                );
 
-            var isX86Checked = X86_Butten.IsChecked == true;
-            var isAmdChecked = AMD_Butten.IsChecked == true;
+            if (isAmdChecked)
+                return await Downloadfiles.Downloadasync(
+                    "https://cpl.chmlfrp.com/frp/frpc_amd.exe",
+                    Paths.FrpExePath
+                );
 
-            if (!isX86Checked && !isAmdChecked)
-            {
-                Reminders.Reminder_Box_Show("选项未选择", "red");
-                return;
-            }
+            return false;
+        });
 
-            Reminders.Reminder_Box_Show("正在下载中...", "green");
-            PorgressBar.IsIndeterminate = true;
-            i++;
-            var downloadSuccess = await Task.Run(async () =>
-            {
-                if (isX86Checked)
-                    return await Downloadfiles.Downloadasync(
-                        "https://cpl.chmlfrp.com/frp/frpc_86.exe",
-                        Paths.FrpExePath
-                    );
-
-                if (isAmdChecked)
-                    return await Downloadfiles.Downloadasync(
-                        "https://cpl.chmlfrp.com/frp/frpc_amd.exe",
-                        Paths.FrpExePath
-                    );
-
-                return false;
-            });
-
-            if (downloadSuccess)
-            {
-                Reminders.Reminder_Box_Show("下载成功", "green");
-            }
-            else
-            {
-                Reminders.Reminder_Box_Show("下载失败", "red");
-                i--;
-                return;
-            }
-
-            await Task.Delay(1000);
-            Visibility = Visibility.Collapsed;
+        if (downloadSuccess)
+        {
+            Reminders.Reminder_Box_Show("下载成功");
         }
+        else
+        {
+            Reminders.Reminder_Box_Show("下载失败", "red");
+            _i--;
+            return;
+        }
+
+        await Task.Delay(1000);
+        Visibility = Visibility.Collapsed;
     }
 }

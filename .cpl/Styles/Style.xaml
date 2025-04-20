@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:styles="clr-namespace:ChmlFrp_Professional_Launcher.Styles">
+                    xmlns:styles="clr-namespace:CPL.Styles">
 
     <Style x:Key="IconButtonsStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent" />
@@ -274,7 +274,8 @@
                                 BorderBrush="Transparent"
                                 Background="Transparent"
                                 Foreground="{DynamicResource ThemeColor}"
-                                FontSize="17"
+                                FontSize="18"
+                                FontFamily="Microsoft YaHei"
                                 HorizontalContentAlignment="Left"
                                 VerticalContentAlignment="Center" />
 
@@ -284,6 +285,7 @@
                                        Foreground="Gray"
                                        Text="{TemplateBinding Postscript}"
                                        IsHitTestVisible="False"
+                                       FontFamily="Microsoft YaHei"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
                         </Grid>

@@ -1,15 +1,9 @@
-﻿using System.Windows.Controls;
+﻿namespace CPL.Pages;
 
-namespace ChmlFrp_Professional_Launcher.Pages
+public partial class BlankPage
 {
-    /// <summary>
-    /// BlankPage.xaml 的交互逻辑
-    /// </summary>
-    public partial class BlankPage : Page
+    public BlankPage()
     {
-        public BlankPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
