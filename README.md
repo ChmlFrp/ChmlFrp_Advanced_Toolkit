@@ -40,7 +40,7 @@
 </br>
 
 ## 友情链接
-- [ ] [国内](https://gitcode.com/)的[GitCode镜像](//gitcode.com/Qyzgj/ChmlFrp_Professional_Launcher)
 - [ ] [官方](https://github.com/TechCat-Team)的[CHMLFRP-FRP](//github.com/TechCat-Team/ChmlFrp-Frp)
 - [ ] [同窗](https://github.com/boringstudents)的[ChmlFrp-UI-Launcher](//cul.chmlfrp.com/)
 - [ ] [枫相](https://github.com/FengXiang2233)的[Xingcheng-ChmlFrp-Lanucher](//xcl.chmlfrp.com/)
+- [ ] [纯爱](https://github.com/huqikuangmo)的[FrpcUI](//FrpcUI.chmlfrp.com/)
