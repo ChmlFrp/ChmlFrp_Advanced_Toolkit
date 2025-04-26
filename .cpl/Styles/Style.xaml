@@ -179,6 +179,7 @@
                     <Border x:Name="border"
                             Background="Transparent"
                             BorderThickness="1"
+                            Padding="5"
                             BorderBrush="{DynamicResource ThemeColor}"
                             CornerRadius="{TemplateBinding CornerRadius}">
 
@@ -309,56 +310,41 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type styles:CornerComboBox}">
-
-                    <Border x:Name="border" BorderBrush="Gray" BorderThickness="1" Background="Transparent"
+                    <Border x:Name="border"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Background="Transparent"
                             CornerRadius="{TemplateBinding CornerRadius}">
                         <Grid>
-                            <!-- 下拉按钮 -->
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
                             <ToggleButton Name="ToggleButton"
                                           Background="Transparent"
                                           BorderBrush="Transparent"
-                                          Grid.Column="2"
                                           Focusable="false"
                                           IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                           ClickMode="Press">
-
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
-                                                CornerRadius="4">
-                                            <Path x:Name="path"
-                                                  Fill="{DynamicResource ThemeColor}"
-                                                  Width="35" Height="35"
-                                                  Stretch="Fill"
-                                                  Data="M11.65 14.65q.15.15.35.15t.35-.15l2.8-2.8q.25-.25.125-.55T14.8 11H9.2q-.35 0-.475.3t.125.55zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"
-                                                  HorizontalAlignment="Right" VerticalAlignment="Center" />
-                                        </Border>
-
-                                        <ControlTemplate.Triggers>
-
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter TargetName="path" Property="Data"
-                                                        Value="M11 11.8V15q0 .425.288.713T12 16t.713-.288T13 15v-3.2l.9.9q.275.275.7.275t.7-.275t.275-.7t-.275-.7l-2.6-2.6q-.3-.3-.7-.3t-.7.3l-2.6 2.6q-.275.275-.275.7t.275.7t.7.275t.7-.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
+                                        <Border Background="Transparent" />
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
-                            <!-- 文本框 -->
+
+                            <Path Data="M 0 0 L 4 4 L 8 0"
+                                  Stroke="Black"
+                                  Name="Path"
+                                  StrokeThickness="1"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,15,0" />
+
                             <ContentPresenter Grid.Column="0" Name="ContentSite"
                                               IsHitTestVisible="False"
                                               Content="{TemplateBinding SelectionBoxItem}"
                                               ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                               VerticalAlignment="Center"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                               HorizontalAlignment="Center" />
-                            <!-- 下拉框 -->
+
                             <Popup Grid.Column="0" Name="Popup"
                                    Placement="Top"
                                    IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -382,6 +368,10 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Path" Property="Stroke" Value="{DynamicResource ThemeColor}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
                             <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ThemeColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -413,7 +403,6 @@
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="border" Property="Background"
                                                 Value="{DynamicResource ThemeColor}" />
-
                                         <Setter TargetName="border" Property="Opacity" Value="0.8" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
@@ -424,7 +413,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    
     <Style TargetType="styles:CornerTunnelTextBox">
         <Setter Property="IsTrue" Value="False" />
         <Setter Property="Template">

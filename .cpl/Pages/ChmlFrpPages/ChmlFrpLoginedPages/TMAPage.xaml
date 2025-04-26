@@ -3,6 +3,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:styles="clr-namespace:CPL.Styles"
       mc:Ignorable="d"
       d:DesignHeight="430"
       d:DesignWidth="620">
@@ -24,6 +25,20 @@
                                Margin="15"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center" />
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                Margin="0,0,0,10">
+                        <styles:CornerButton x:Name="BtnPrevious"
+                                             CornerRadius="3"
+                                             Content="上一页"
+                                             Click="btnPrevious_Click" />
+                        <styles:CornerButton x:Name="BtnNext"
+                                             Margin="5,0,0,0"
+                                             CornerRadius="3"
+                                             Content="下一页"
+                                             Click="btnNext_Click" />
+                    </StackPanel>
+                    
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
@@ -46,7 +61,7 @@
             </Border>
         </Grid>
 
-        <Grid x:Name="MainGrid" Margin="2" Grid.Row="1">
+        <Grid x:Name="MainGrid" Margin="5" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />

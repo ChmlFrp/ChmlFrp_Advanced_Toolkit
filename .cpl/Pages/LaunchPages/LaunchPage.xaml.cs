@@ -4,6 +4,7 @@ public partial class LaunchPage
 {
     private string _node;
     private Process _process;
+    private int _i;
 
     public LaunchPage()
     {
@@ -54,7 +55,8 @@ public partial class LaunchPage
             }
         }
 
-        var frpclogFilePath = Path.Combine(Paths.CplPath, "frpc.logs");
+        _i++;
+        var frpclogFilePath = Path.Combine(Paths.CplPath, $"{_i}.logs");
 
         _process = new Process();
 

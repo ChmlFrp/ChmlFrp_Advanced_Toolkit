@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace CPL;
 
-internal static class MainClass
+internal abstract class MainClass
 {
     public static MainWindow MainWindowClass;
 
@@ -43,7 +43,7 @@ internal static class MainClass
         }
     }
 
-    public abstract class User
+    public static class User
     {
         private static readonly RegistryKey Key =
             Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\ChmlFrp", true);
@@ -51,7 +51,12 @@ internal static class MainClass
         public static string Password;
         public static string Usertoken;
 
-        public static void Load()
+        static User()
+        {
+            Load();
+        }
+
+        private static void Load()
         {
             Username = Key.GetValue("username")?.ToString();
             Password = Key.GetValue("password")?.ToString();
@@ -279,7 +284,6 @@ internal static class MainClass
 
             try
             {
-                User.Load();
                 //检测是否有相关配置文件
                 if (!File.Exists(Paths.CplPath))
                     Directory.CreateDirectory(Paths.CplPath);

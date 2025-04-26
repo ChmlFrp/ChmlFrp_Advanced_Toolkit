@@ -109,7 +109,7 @@ public class CornerComboBox : ComboBox
             typeof(CornerComboBox)
         );
 
-    //CornerRadius
+    // CornerRadius
     public CornerRadius CornerRadius
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);
