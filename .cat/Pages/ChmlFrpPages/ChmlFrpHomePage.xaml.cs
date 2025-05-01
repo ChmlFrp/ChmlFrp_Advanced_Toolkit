@@ -1,11 +1,11 @@
 ﻿namespace CPL.Pages.ChmlFrpPages;
 
-public partial class ChmlFrphomePage
+public partial class ChmlFrpHomePage
 {
     private readonly HomePage _homePage;
     private readonly TmaPage _tmaPage;
 
-    public ChmlFrphomePage()
+    public ChmlFrpHomePage()
     {
         InitializeComponent();
         if (!SignInBool)

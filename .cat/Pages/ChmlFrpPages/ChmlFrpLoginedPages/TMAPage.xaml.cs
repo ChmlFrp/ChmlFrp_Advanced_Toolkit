@@ -32,12 +32,15 @@ public partial class TmaPage
 
     private void DisplayTunnels()
     {
-        MainGrid.Children.Clear();
         PagesClass.LaunchPage.ComboBox.Items.Clear();
+        
+        foreach (var tunnel in _tunnels) PagesClass.LaunchPage.ComboBox.Items.Add(tunnel["name"]!.ToString());
 
+        MainGrid.Children.Clear();
+        
         var displayTunnels = _tunnels.Skip((_currentPage - 1) * TunnelsPerPage).Take(TunnelsPerPage);
         var index = 1;
-
+        
         foreach (var tunnel in displayTunnels)
         {
             var tunnelid = tunnel["id"]?.ToString();
@@ -45,8 +48,6 @@ public partial class TmaPage
             var tunneldorp = tunnel["dorp"]!.ToString();
             var tunnelname = tunnel["name"]!.ToString();
             var tunnelstate = tunnel["state"]!.Value<bool>();
-
-            PagesClass.LaunchPage.ComboBox.Items.Add(tunnelname);
 
             var border = new Border
             {
@@ -73,7 +74,7 @@ public partial class TmaPage
             {
                 Margin = new Thickness(5),
                 Text = $"#{tunnelid}",
-                Foreground = new SolidColorBrush(Colors.Gray),
+                IsEnabled = false,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom
             };
@@ -106,6 +107,8 @@ public partial class TmaPage
     private void UpdatePaginationButtons()
     {
         BtnPrevious.IsSelected = _currentPage > 1;
+        BtnPrevious.IsEnabled = _currentPage > 1;
+        BtnNext.IsEnabled = _currentPage * TunnelsPerPage < _tunnels.Count;
         BtnNext.IsSelected = _currentPage * TunnelsPerPage < _tunnels.Count;
     }
 
@@ -141,6 +144,6 @@ public partial class TmaPage
     {
         Reminders.Reminder_Box_Show("跳转中...");
         await Task.Delay(500);
-        Process.Start(new ProcessStartInfo("https://preview.panel.chmlfrp.cn/tunnel/list"));
+        Process.Start(new ProcessStartInfo("https://panel.chmlfrp.cn/tunnel/list"));
     }
 }

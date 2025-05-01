@@ -9,7 +9,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         WindowState="Normal"
-        Title="ChmlFrp Professional Launcher">
+        Title="ChmlFrp Advanced Toolkit">
 
     <Grid>
         <Grid>
@@ -24,7 +24,7 @@
                     Height="50"
                     Background="{DynamicResource ThemeColor}">
                 <Grid>
-                    <Path Data="{DynamicResource logo}"
+                    <Path Data="{DynamicResource Logo}"
                           Stretch="Fill"
                           Fill="{DynamicResource WhiteColorLight}"
                           Margin="15,0,0,0"
@@ -39,14 +39,14 @@
 
                             <styles:CornerIconRadioButton IsChecked="True"
                                                           Margin="0,0,5,0"
-                                                          Data="{DynamicResource home}"
+                                                          Data="{DynamicResource Home}"
                                                           Content="启动"
                                                           x:Name="LaunchPageButton"
                                                           Click="NavigateLaunching" />
 
                             <styles:CornerIconRadioButton Margin="0,0,5,0"
                                                           Content="登录"
-                                                          Data="{DynamicResource login}"
+                                                          Data="{DynamicResource Login}"
                                                           x:Name="ChmlfrpPageButton"
                                                           Click="NavigateChmlfrpPage" />
 
@@ -63,12 +63,12 @@
 
                         <Button Margin="0,0,5,0"
                                 Style="{StaticResource IconButtonsStyle}"
-                                Content="{DynamicResource minimize}"
+                                Content="{DynamicResource Minimize}"
                                 Click="MinimizeThis" />
 
                         <Button Margin="0,0,15,0"
                                 Style="{StaticResource IconButtonsStyle}"
-                                Content="{DynamicResource close}"
+                                Content="{DynamicResource Close}"
                                 Click="CloseThis"
                                 Tag="IsCloseButton" />
 

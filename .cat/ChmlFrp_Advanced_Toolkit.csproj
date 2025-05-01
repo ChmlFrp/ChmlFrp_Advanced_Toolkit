@@ -4,12 +4,12 @@
         <UseWPF>true</UseWPF>
         <OutputType>WinExe</OutputType>
         <LangVersion>latest</LangVersion>
-        <FileVersion>0.0.1.4</FileVersion>
+        <FileVersion>0.0.1.5</FileVersion>
         <TargetFramework>net48</TargetFramework>
         <AssemblyVersion>0.0.1.0</AssemblyVersion>
         <ApplicationIcon>Icons\logo.ico</ApplicationIcon>
         <Copyright>Copyright © Qusay Diaz 2024-2025</Copyright>
-        <AssemblyName>ChmlFrp Professional Launcher</AssemblyName>
+        <AssemblyName>ChmlFrp Advanced Toolkit</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

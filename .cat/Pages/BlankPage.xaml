@@ -1,18 +1,12 @@
 ﻿<Page x:Class="CPL.Pages.BlankPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      mc:Ignorable="d"
-      d:DesignHeight="450"
-      d:DesignWidth="800"
-      Title="BlankPage">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid>
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <Path Margin="0,-25,0,0"
-                  Data="{DynamicResource construction}"
+                  Data="{DynamicResource Construction}"
                   Fill="{DynamicResource WhiteColorLight}"
                   Stretch="Fill"
                   Height="200"

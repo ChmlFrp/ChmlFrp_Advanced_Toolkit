@@ -5,7 +5,7 @@ namespace CPL;
 public partial class MainWindow
 {
     private static ChmlFrpLoginPage _chmlFrpLoginPage;
-    public readonly BlankPage BlankPage = new();
+    public readonly Pages.SettingPages.SettingHomePage SettingHomePage = new();
 
     public MainWindow()
     {
@@ -41,7 +41,7 @@ public partial class MainWindow
 
     private void NavigateSettings(object sender, RoutedEventArgs e)
     {
-        PagesNavigation.Navigate(BlankPage);
+        PagesNavigation.Navigate(SettingHomePage);
     }
 
     protected override void OnClosed(EventArgs e)

@@ -1,15 +1,10 @@
-﻿<Page x:Class="CPL.Pages.ChmlFrpPages.ChmlFrphomePage"
+﻿<Page x:Class="CPL.Pages.SettingPages.SettingHomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      mc:Ignorable="d"
-      d:DesignHeight="430"
-      d:DesignWidth="780"
-      Title="ChmlFrphomePage">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130" />
+            <ColumnDefinition Width="145" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
@@ -21,17 +16,15 @@
                     VerticalAlignment="Top"
                     Orientation="Vertical">
             <RadioButton IsChecked="True"
-                         Content="用户管理"
+                         Content="个性化"
+                         Click="ButtonBase_OnClick"
                          Style="{DynamicResource MenuRadioButtonStyle}"
-                         Tag="{DynamicResource home}"
-                         Click="rdLaunchPage_Click" />
+                         Tag="{DynamicResource Customize}" />
 
-            <RadioButton Tag="{DynamicResource TMA}"
-                         Click="rdTMA_Click"
-                         x:Name="RdTma"
-                         FontWeight="Bold"
-                         Content="隧道管理"
-                         Style="{DynamicResource MenuRadioButtonStyle}" />
+            <RadioButton Content="关于与鸣谢"
+                         Click="ButtonBase_OnClick"
+                         Style="{DynamicResource MenuRadioButtonStyle}"
+                         Tag="{DynamicResource About}" />
         </StackPanel>
         <Grid Grid.Column="1">
             <Border CornerRadius="0,0,10,10">

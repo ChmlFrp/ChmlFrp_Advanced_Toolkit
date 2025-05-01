@@ -1,11 +1,11 @@
 <div align="center"><img src=".github/icon/logo.ico" height="150" Width="150">
 
-# ChmlFrp_Professional_Launcher
-`ChmlFrp_Professional_Launcher` 是 [ChmlFrp](//preview.panel.chmlfrp.cn) 的第三方应用，适用于 Windows 11/10 至 Windows 7或更低版本。 使用 WPF + C# + .net framework4.8 开发的图形化应用。
+# ChmlFrp_Advanced_Toolkit
+`ChmlFrp_Advanced_Toolkit` 是 [ChmlFrp](//preview.panel.chmlfrp.cn) 的第三方应用，适用于 Windows 11/10 至 Windows 7或更低版本。 使用 WPF + C# + .net framework4.8 开发的图形化应用。
 </br>
-![GitHub last commit](https://img.shields.io/github/last-commit/Qianyiaz/ChmlFrp_Professional_Launcher?logo=github) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Qianyiaz/ChmlFrp_Professional_Launcher?logo=github)
+![GitHub last commit](https://img.shields.io/github/last-commit/Qianyiaz/ChmlFrp_Advanced_Toolkit?logo=github) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Qianyiaz/ChmlFrp_Advanced_Toolkit?logo=github)
 
-如果想查看代码可以[点击这里](/.cpl)。
+如果想查看代码可以[点击这里](/.cat)。
 
 如果您也想开发和我一起开发，别犹豫追下面有链接[点击跳转](#联系我)。
 
@@ -13,16 +13,16 @@
 
 目前本项目正在开发中... 如果想使用打包好的软件请点击下面下载：
 
-[![.NET Framework Desktop](https://github.com/ChmlFrp/ChmlFrp_Professional_Launcher/actions/workflows/Build.yml/badge.svg)](https://github.com/ChmlFrp/ChmlFrp_Professional_Launcher/actions/workflows/Build.yml)
+[![.NET Framework Desktop](https://github.com/ChmlFrp/ChmlFrp_Advanced_Toolkit/actions/workflows/Build.yml/badge.svg)](https://github.com/ChmlFrp/ChmlFrp_Advanced_Toolkit/actions/workflows/Build.yml)
 <div align="left"><br/>
  
 ## 星标历史
 
-<a href="https://star-history.com/#ChmlFrp/ChmlFrp_Professional_Launcher&Timeline">
+<a href="https://star-history.com/#ChmlFrp/ChmlFrp_Advanced_Toolkit&Timeline">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ChmlFrp/ChmlFrp_Professional_Launcher&type=Timeline&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ChmlFrp/ChmlFrp_Professional_Launcher&type=Timeline" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ChmlFrp/ChmlFrp_Professional_Launcher&type=Timeline" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ChmlFrp/ChmlFrp_Advanced_Toolkit&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ChmlFrp/ChmlFrp_Advanced_Toolkit&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ChmlFrp/ChmlFrp_Advanced_Toolkit&type=Timeline" />
  </picture>
 </a>
 

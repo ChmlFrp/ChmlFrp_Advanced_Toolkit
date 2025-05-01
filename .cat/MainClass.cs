@@ -19,20 +19,21 @@ internal abstract class MainClass
 
     internal static class PagesClass
     {
-        public static ChmlFrphomePage ChmlFrpHomePage;
+        public static ChmlFrpHomePage ChmlFrpHomePage;
         public static readonly LaunchPage LaunchPage = new();
     }
 
     public abstract class Paths
     {
         //定义路径
-        private static readonly string DirectoryPath = Directory.GetCurrentDirectory();
+        public static readonly string DataPath =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ChmlFrp");
 
-        public static readonly string CplPath = Path.Combine(DirectoryPath, "CPL");
-        public static readonly string IniPath = Path.Combine(CplPath, "Ini");
-        public static readonly string FrpExePath = Path.Combine(CplPath, "frpc.exe");
-        public static readonly string PicturesPath = Path.Combine(CplPath, "Pictures");
-        public static readonly string LogfilePath = Path.Combine(CplPath, "Debug.logs");
+        public static readonly string IniPath = Path.Combine(DataPath, "Inis");
+        public static readonly string LogPath = Path.Combine(DataPath, "Logs");
+        public static readonly string FrpExePath = Path.Combine(DataPath, "frpc.exe");
+        public static readonly string PicturesPath = Path.Combine(DataPath, "Pictures");
+        public static readonly string LogfilePath = Path.Combine(DataPath, "Debug-CPL.logs");
 
         public abstract class Temp
         {
@@ -41,12 +42,33 @@ internal abstract class MainClass
             public static readonly string TempApiUser = Path.GetTempFileName();
             public static string TempUserImage;
         }
+
+        public static bool IsOccupied(string filePath)
+        {
+            if (!File.Exists(filePath)) return false;
+
+            FileStream stream = null;
+            try
+            {
+                stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+                return false;
+            }
+            catch
+            {
+                return true;
+            }
+            finally
+            {
+                stream?.Close();
+            }
+        }
     }
 
     public static class User
     {
         private static readonly RegistryKey Key =
             Registry.CurrentUser.CreateSubKey(@"SOFTWARE\\ChmlFrp", true);
+
         public static string Username;
         public static string Password;
         public static string Usertoken;
@@ -127,7 +149,7 @@ internal abstract class MainClass
                 password = User.Password;
                 name = User.Username;
             }
-            
+
             if (!Download(
                     $"https://cf-v2.uapis.cn/login?username={name}&password={password}",
                     Paths.Temp.TempApiLogin
@@ -136,16 +158,17 @@ internal abstract class MainClass
                 if (remind) Reminders.Reminder_Box_Show("网络错误", "red");
                 return false;
             }
-            
+
             var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
             var msg = jObject["msg"]?.ToString();
-            
+
             Reminders.LogsOutputting("API提醒：" + msg);
             if (msg != "登录成功")
             {
-                if (remind) Reminders.Reminder_Box_Show(msg,"red");
+                if (remind) Reminders.Reminder_Box_Show(msg, "red");
                 return false;
             }
+
             if (remind) Reminders.Reminder_Box_Show(msg);
 
             User.Save(name, password, jObject["data"]?["usertoken"]?.ToString());
@@ -159,17 +182,11 @@ internal abstract class MainClass
         private static readonly ReminderBoxShow Rbsw = new();
         private static readonly ReminderInterfaceShow Risw = new();
         private static readonly ReminderDownloadShow Rdsw = new();
-        private static bool _first = true;
-
 
         public static void LogsOutputting(string logEntry)
         {
             logEntry = $"[{DateTime.Now}] " + logEntry;
-            if (_first)
-            {
-                _first = false;
-                File.WriteAllText(Paths.LogfilePath, string.Empty);
-            }
+
             Console.WriteLine(logEntry);
             File.AppendAllText(Paths.LogfilePath, logEntry + Environment.NewLine);
         }
@@ -269,7 +286,7 @@ internal abstract class MainClass
 
         public static void InitializeFirst()
         {
-            // 检测是否有两个ChmlFrp Professional Launcher进程
+            // 检测是否有两个ChmlFrp Advanced Toolkit进程
             if (IsProcess(Process.GetCurrentProcess().ProcessName))
             {
                 MessageBox.Show(
@@ -284,17 +301,11 @@ internal abstract class MainClass
 
             try
             {
-                //检测是否有相关配置文件
-                if (!File.Exists(Paths.CplPath))
-                    Directory.CreateDirectory(Paths.CplPath);
-                if (!File.Exists(Paths.PicturesPath))
-                    Directory.CreateDirectory(Paths.PicturesPath);
-                if (File.Exists(Path.Combine(Paths.CplPath, "update.bat")))
-                    File.Delete(Path.Combine(Paths.CplPath, "update.bat"));
-                if (!File.Exists(Paths.IniPath))
-                    Directory.CreateDirectory(Paths.IniPath);
-                if (!File.Exists(Paths.LogfilePath))
-                    File.WriteAllText(Paths.LogfilePath, string.Empty);
+                Directory.CreateDirectory(Paths.DataPath);
+                Directory.CreateDirectory(Paths.LogPath);
+                Directory.CreateDirectory(Paths.PicturesPath);
+                Directory.CreateDirectory(Paths.IniPath);
+                File.WriteAllText(Paths.LogfilePath, string.Empty);
             }
             catch
             {
@@ -306,7 +317,7 @@ internal abstract class MainClass
                 );
 
                 MainWindowClass.Close();
-            } 
+            }
         }
 
         private static async void IsUpdate()
@@ -316,7 +327,7 @@ internal abstract class MainClass
 
             if (
                 await Downloadfiles.Downloadasync(
-                    "https://cpl.chmlfrp.com/update/update.json",
+                    "http://cat.chmlfrp.com/update/update.json",
                     Paths.Temp.TempApiLogin
                 )
             )
@@ -347,13 +358,11 @@ internal abstract class MainClass
             if (DateTime.Today is not { Month: 4, Day: 1 }) return;
             var resourceDictionary = new ResourceDictionary
             {
-                Source = new Uri("pack://application:,,,/ChmlFrp Professional Launcher;component/Themes/Theme.xaml")
+                Source = new Uri("pack://application:,,,/ChmlFrp Advanced Toolkit;component/Themes/Theme.xaml")
             };
             if (resourceDictionary["ThemeColor"] is SolidColorBrush themeColorBrush)
                 themeColorBrush.Color = Colors.LightGreen;
             Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-            MainWindowClass.BlankPage.TextBlock.Text = "愚人节快乐";
-            MainWindowClass.BlankPage.TextBlock.Foreground = new SolidColorBrush(Colors.LightGreen);
         }
 
         private static void SetImage()

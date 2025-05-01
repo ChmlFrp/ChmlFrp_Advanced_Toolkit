@@ -283,7 +283,7 @@
                             <TextBlock x:Name="borderTextBlock"
                                        Background="Transparent"
                                        FontSize="16"
-                                       Foreground="Gray"
+                                       Foreground="Black"
                                        Text="{TemplateBinding Postscript}"
                                        IsHitTestVisible="False"
                                        FontFamily="Microsoft YaHei"
@@ -413,7 +413,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="styles:CornerTunnelTextBox">
         <Setter Property="IsTrue" Value="False" />
         <Setter Property="Template">
@@ -430,6 +430,7 @@
                                 Background="Transparent"
                                 FontWeight="Bold"
                                 IsEnabled="False"
+                                Foreground="Black"
                                 x:Name="text"
                                 FontSize="17"
                                 HorizontalContentAlignment="Center"
@@ -454,7 +455,6 @@
     </Style>
 
     <Style TargetType="styles:CornerTextBlock">
-        <Setter Property="Foreground" Value="Black" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="styles:CornerTextBlock">
@@ -464,10 +464,9 @@
                             Padding="2"
                             BorderThickness="0"
                             Background="Transparent"
+                            Foreground="Black"
                             FontWeight="Bold"
-                            Foreground="{TemplateBinding Foreground}"
-                            IsEnabled="False"
-                            x:Name="text"
+                            IsReadOnly="True"
                             FontSize="17"
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center" />

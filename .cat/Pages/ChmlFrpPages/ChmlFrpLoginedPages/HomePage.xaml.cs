@@ -31,16 +31,16 @@ public partial class HomePage
             Reminders.Reminder_Box_Show("用户信息加载失败", "red");
             return;
         }
-        
+
         var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiUser));
 
         Paths.Temp.TempUserImage = Path.GetTempFileName();
-        
+
         await Downloadfiles.Downloadasync(
             jsonObject["data"]?["userimg"]?.ToString(),
             Paths.Temp.TempUserImage
         );
-        
+
         UserImage.ImageSource = new BitmapImage(new Uri(Paths.Temp.TempUserImage));
         UserTextBlock.Text = jsonObject["data"]?["username"]?.ToString();
         Usermailbox.Text = jsonObject["data"]?["email"]?.ToString();

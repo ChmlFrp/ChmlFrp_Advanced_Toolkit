@@ -26,7 +26,7 @@ public partial class ReminderInterfaceShow
         await Task.Delay(1000);
 
         var exe = Path.Combine(
-            Paths.CplPath,
+            Paths.DataPath,
             "CPL.exe"
         );
 
@@ -35,27 +35,17 @@ public partial class ReminderInterfaceShow
             Reminders.Reminder_Box_Show("下载成功");
             Reminders.LogsOutputting("下载成功");
 
-            var batchFilePath = Path.Combine(Paths.CplPath, "update.bat");
             var processPath = Process.GetCurrentProcess().MainModule?.FileName;
             var batchContent =
-                $@"
-                    @echo off
-                    timeout /t 3 /nobreak
-                    move /y ""{exe}"" ""{processPath}""
-                    start """" ""{processPath}""
-                    exit
-                    ";
-
-            File.WriteAllText(batchFilePath, batchContent);
-
+                $"""timeout /t 3 /nobreak & move /y "{exe}" "{processPath}" & start "" "{processPath}" & exit""";
             var process = new Process();
             ProcessStartInfo processInfo = new(
                 "cmd.exe",
-                $"/c start {batchFilePath}"
+                $"/c {batchContent}"
             )
             {
                 UseShellExecute = true,
-                CreateNoWindow = true
+                CreateNoWindow = false
             };
             process.StartInfo = processInfo;
             process.Start();

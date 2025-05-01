@@ -30,7 +30,7 @@ public partial class ChmlFrpLoginPage
                 {
                     await Task.Delay(1000);
                     Visibility = Visibility.Collapsed;
-                    PagesClass.ChmlFrpHomePage = new ChmlFrphomePage();
+                    PagesClass.ChmlFrpHomePage = new ChmlFrpHomePage();
                     MainWindowClass.NavigateChmlfrpPage(null, null);
 
                     LogonButton.Click += Logon;
@@ -61,6 +61,6 @@ public partial class ChmlFrpLoginPage
     {
         Reminders.Reminder_Box_Show("跳转中...");
         await Task.Delay(500);
-        Process.Start(new ProcessStartInfo("https://preview.panel.chmlfrp.cn/sign"));
+        Process.Start(new ProcessStartInfo("https://panel.chmlfrp.cn/sign"));
     }
 }

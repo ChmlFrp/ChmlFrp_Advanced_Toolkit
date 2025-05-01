@@ -6,12 +6,12 @@ on:
   push:
     paths:
 
-      - ".cpl/**"
+      - ".cat/**"
       - ".github/workflows/Build.yml"
   pull_request:
     paths:
       
-      - ".cpl/**"
+      - ".cat/**"
       - ".github/workflows/Build.yml"
   workflow_dispatch:
 
@@ -26,8 +26,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Project_Path: ".cpl/ChmlFrp_Professional_Launcher.csproj"
-      Build_Output_Path: ".cpl/bin/${{ matrix.configuration }}/net48/ChmlFrp Professional Launcher.exe"
+      Project_Path: ".cat/ChmlFrp_Advanced_Toolkit.csproj"
+      Build_Output_Path: ".cat/bin/${{ matrix.configuration }}/net48/ChmlFrp Advanced Toolkit.exe"
 
     steps:
 
