@@ -3,7 +3,7 @@
 # ChmlFrp_Advanced_Toolkit
 `ChmlFrp_Advanced_Toolkit` 是 [ChmlFrp](//preview.panel.chmlfrp.cn) 的第三方应用，适用于 Windows 11/10 至 Windows 7或更低版本。 使用 WPF + C# + .net framework4.8 开发的图形化应用。
 </br>
-![GitHub last commit](https://img.shields.io/github/last-commit/Qianyiaz/ChmlFrp_Advanced_Toolkit?logo=github) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Qianyiaz/ChmlFrp_Advanced_Toolkit?logo=github)
+![GitHub last commit](https://img.shields.io/github/last-commit/ChmlFrp/ChmlFrp_Advanced_Toolkit?logo=github) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ChmlFrp/ChmlFrp_Advanced_Toolkit?logo=github)
 
 如果想查看代码可以[点击这里](/.cat)。
 

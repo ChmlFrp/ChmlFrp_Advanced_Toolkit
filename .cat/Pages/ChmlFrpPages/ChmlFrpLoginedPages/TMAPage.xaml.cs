@@ -17,16 +17,20 @@ public partial class TmaPage
 
     private async void InitializeApps()
     {
-        if (!await Downloadfiles.Downloadasync(
-                "https://cf-v2.uapis.cn/tunnel?token=" + User.Usertoken,
-                Paths.Temp.TempApiTunnel
-            )) return;
+        var parameters = new Dictionary<string, string>
+        {
+            { "token", $"{User.Usertoken}" }
+        };
+        
+        var jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/tunnel", parameters);
 
-        var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiTunnel));
+        if (jObject == null || jObject["msg"]?.ToString() != "获取隧道数据成功")
+        {
+            Reminders.Reminder_Box_Show("获取隧道数据失败", "red");
+            return;
+        }
 
-        if (jsonObject["msg"]?.ToString() != "获取隧道数据成功") return;
-
-        _tunnels = jsonObject["data"]!.ToList();
+        _tunnels = jObject["data"]!.ToList();
         DisplayTunnels();
     }
 

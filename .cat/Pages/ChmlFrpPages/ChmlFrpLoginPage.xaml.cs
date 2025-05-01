@@ -26,7 +26,7 @@ public partial class ChmlFrpLoginPage
         {
             if (TextBoxPassword.Text.Length is >= 6 and < 48)
             {
-                if (Downloadfiles.GetApItoLogin(true, TextBoxUsername.Text, TextBoxPassword.Text))
+                if (await Downloadfiles.GetApItoLogin(true, TextBoxUsername.Text, TextBoxPassword.Text))
                 {
                     await Task.Delay(1000);
                     Visibility = Visibility.Collapsed;

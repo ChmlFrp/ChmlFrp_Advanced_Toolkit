@@ -9,6 +9,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         WindowState="Normal"
+        Visibility="Collapsed"
         Title="ChmlFrp Advanced Toolkit">
 
     <Grid>

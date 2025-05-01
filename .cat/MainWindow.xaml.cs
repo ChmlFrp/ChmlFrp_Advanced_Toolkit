@@ -1,47 +1,43 @@
-﻿using System.Threading;
-
-namespace CPL;
+﻿namespace CPL;
 
 public partial class MainWindow
 {
-    private static ChmlFrpLoginPage _chmlFrpLoginPage;
-    public readonly Pages.SettingPages.SettingHomePage SettingHomePage = new();
+    public ChmlFrpLoginPage ChmlFrpLoginPage;
+    private readonly Pages.SettingPages.SettingHomePage _settingHomePage = new();
 
     public MainWindow()
     {
         MainWindowClass = this;
-        Initialize.InitializeFirst();
         InitializeComponent();
-        StartWindow startWindow = new();
-        startWindow.Show();
-        Thread.Sleep(2000);
-        startWindow.Close();
+        InitializeAsync();
+    }
 
-        if (!Downloadfiles.GetApItoLogin(false)) _chmlFrpLoginPage = new ChmlFrpLoginPage();
-        PagesClass.ChmlFrpHomePage = new();
-        Initialize.InitializeNext();
-        NavigateLaunching(null, null);
+    private void InitializeAsync()
+    {
+        StartWindow startWindow = new();
+        startWindow.ShowDialog();
+        Visibility = Visibility.Visible;    
     }
 
     public void NavigateChmlfrpPage(object sender, RoutedEventArgs e)
     {
         if (!SignInBool)
         {
-            _chmlFrpLoginPage.Visibility = Visibility.Visible;
-            RemindersNavigation.Navigate(_chmlFrpLoginPage);
+            ChmlFrpLoginPage.Visibility = Visibility.Visible;
+            RemindersNavigation.Navigate(ChmlFrpLoginPage);
         }
 
         PagesNavigation.Navigate(PagesClass.ChmlFrpHomePage);
     }
 
-    private void NavigateLaunching(object sender, RoutedEventArgs e)
+    public void NavigateLaunching(object sender, RoutedEventArgs e)
     {
         PagesNavigation.Navigate(PagesClass.LaunchPage);
     }
 
     private void NavigateSettings(object sender, RoutedEventArgs e)
     {
-        PagesNavigation.Navigate(SettingHomePage);
+        PagesNavigation.Navigate(_settingHomePage);
     }
 
     protected override void OnClosed(EventArgs e)

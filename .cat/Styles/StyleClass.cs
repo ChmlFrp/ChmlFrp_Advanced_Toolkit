@@ -149,3 +149,5 @@ public class CornerTunnelTextBox : CornerTextBlock
         set => SetValue(IsTrueProperty, value);
     }
 }
+
+public class UserCard : TextBox;

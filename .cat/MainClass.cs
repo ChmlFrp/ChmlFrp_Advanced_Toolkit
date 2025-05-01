@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
@@ -33,15 +35,7 @@ internal abstract class MainClass
         public static readonly string LogPath = Path.Combine(DataPath, "Logs");
         public static readonly string FrpExePath = Path.Combine(DataPath, "frpc.exe");
         public static readonly string PicturesPath = Path.Combine(DataPath, "Pictures");
-        public static readonly string LogfilePath = Path.Combine(DataPath, "Debug-CPL.logs");
-
-        public abstract class Temp
-        {
-            public static readonly string TempApiTunnel = Path.GetTempFileName();
-            public static readonly string TempApiLogin = Path.GetTempFileName();
-            public static readonly string TempApiUser = Path.GetTempFileName();
-            public static string TempUserImage;
-        }
+        public static readonly string LogfilePath = Path.Combine(DataPath, "Debug-CAT.logs");
 
         public static bool IsOccupied(string filePath)
         {
@@ -142,34 +136,59 @@ internal abstract class MainClass
             return true;
         }
 
-        public static bool GetApItoLogin(bool remind = true, string name = "", string password = "")
+        public static async Task<JObject> GetApi(string url,Dictionary<string, string> parameters = null)
+        {
+            if (parameters != null)
+            {
+                url = $"{url}?{string.Join("&", parameters.Select(pair => $"{pair.Key}={pair.Value}"))}";
+            }
+
+            try
+            {
+                using var client = new HttpClient();
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                var jObject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                return jObject;
+            }
+            catch (Exception ex)
+            {
+                Reminders.LogsOutputting($"请求错误: {ex.Message}");
+                return null;
+            }
+        } 
+        
+        public static async Task<bool> GetApItoLogin(bool isRemind = true, string name = "", string password = "")
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(password))
             {
                 password = User.Password;
                 name = User.Username;
             }
-
-            if (!Download(
-                    $"https://cf-v2.uapis.cn/login?username={name}&password={password}",
-                    Paths.Temp.TempApiLogin
-                ))
+            
+            var parameters = new Dictionary<string, string>
             {
-                if (remind) Reminders.Reminder_Box_Show("网络错误", "red");
+                { "username", $"{name}" },
+                { "password", $"{password}" }
+            };
+            
+            var jObject = await GetApi("https://cf-v2.uapis.cn/login", parameters);
+
+            if (jObject == null)
+            {
+                if (isRemind) Reminders.Reminder_Box_Show("网络错误", "red");
                 return false;
             }
-
-            var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
+            
             var msg = jObject["msg"]?.ToString();
-
             Reminders.LogsOutputting("API提醒：" + msg);
             if (msg != "登录成功")
             {
-                if (remind) Reminders.Reminder_Box_Show(msg, "red");
+                if (isRemind) Reminders.Reminder_Box_Show(msg, "red");
                 return false;
             }
 
-            if (remind) Reminders.Reminder_Box_Show(msg);
+            if (isRemind) Reminders.Reminder_Box_Show(msg);
 
             User.Save(name, password, jObject["data"]?["usertoken"]?.ToString());
             SignInBool = true;
@@ -320,36 +339,30 @@ internal abstract class MainClass
             }
         }
 
-        private static async void IsUpdate()
+        private static async void IsUpdate(bool isRemind = false)
         {
-            Reminders.Reminder_Box_Show("开始更新", "blue");
+            if (isRemind) Reminders.Reminder_Box_Show("开始更新", "blue");
             Reminders.LogsOutputting("开始更新");
 
-            if (
-                await Downloadfiles.Downloadasync(
-                    "http://cat.chmlfrp.com/update/update.json",
-                    Paths.Temp.TempApiLogin
-                )
-            )
+            var jObject = await Downloadfiles.GetApi("http://cat.chmlfrp.com/update/update.json");
+
+            if (jObject == null)
             {
-                var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
-                if (jObject["version"]?.ToString() == Assembly.GetExecutingAssembly().GetName().Version.ToString())
-                {
-                    Reminders.Reminder_Box_Show("已是最新版本");
-                    Reminders.LogsOutputting("已是最新版本");
-                }
-                else
-                {
-                    Reminders.Reminder_Box_Show("发现新版本", "blue");
-                    await Task.Delay(2000);
-                    Reminders.Reminder_Interface_Show(jObject["subject"]?.ToString(), jObject["text"]?.ToString(),
-                        true);
-                }
+                if (isRemind) Reminders.Reminder_Box_Show("更新失败", "red");
+                Reminders.LogsOutputting("更新失败");
+            }
+            
+            if (jObject!["version"]?.ToString() == Assembly.GetExecutingAssembly().GetName().Version.ToString())
+            {
+                if (isRemind) Reminders.Reminder_Box_Show("已是最新版本");
+                Reminders.LogsOutputting("已是最新版本");
             }
             else
             {
-                Reminders.Reminder_Box_Show("更新失败", "red");
-                Reminders.LogsOutputting("更新失败");
+                Reminders.Reminder_Box_Show("发现新版本", "blue");
+                await Task.Delay(2000);
+                Reminders.Reminder_Interface_Show(jObject["subject"]?.ToString(), jObject["text"]?.ToString(),
+                    true);
             }
         }
 

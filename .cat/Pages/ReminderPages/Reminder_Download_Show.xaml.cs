@@ -38,13 +38,13 @@ public partial class ReminderDownloadShow
         {
             if (isX86Checked)
                 return await Downloadfiles.Downloadasync(
-                    "https://cpl.chmlfrp.com/frp/frpc_86.exe",
+                    "http://cat.chmlfrp.com/frp/frpc_86.exe",
                     Paths.FrpExePath
                 );
 
             if (isAmdChecked)
                 return await Downloadfiles.Downloadasync(
-                    "https://cpl.chmlfrp.com/frp/frpc_amd.exe",
+                    "http://cat.chmlfrp.com/frp/frpc_amd.exe",
                     Paths.FrpExePath
                 );
 
@@ -58,6 +58,7 @@ public partial class ReminderDownloadShow
         else
         {
             Reminders.Reminder_Box_Show("下载失败", "red");
+            PorgressBar.IsIndeterminate = false;
             _i--;
             return;
         }

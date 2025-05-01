@@ -16,7 +16,7 @@ public partial class StartWindow
         Loaded += StartWindow_Loaded;
     }
 
-    private void StartWindow_Loaded(object sender, RoutedEventArgs e)
+    private async void StartWindow_Loaded(object sender, RoutedEventArgs e)
     {
         var window = GetWindow(this);
         if (window == null) return;
@@ -24,6 +24,16 @@ public partial class StartWindow
         window.ShowInTaskbar = false;
         var hWnd = new WindowInteropHelper(window).Handle;
         SetWindowPos(hWnd, HwndTopmost, 0, 0, 0, 0, SwpNomove | SwpNosize);
+        
+        Initialize.InitializeFirst();
+        if (!await Downloadfiles.GetApItoLogin(false)) 
+            MainWindowClass.ChmlFrpLoginPage = new ChmlFrpLoginPage();
+        PagesClass.ChmlFrpHomePage = new();
+        Initialize.InitializeNext();
+        MainWindowClass.NavigateLaunching(null,null);
+        
+        await Task.Delay(1000);
+        Close();
     }
 
     [DllImport("user32.dll", SetLastError = true)]

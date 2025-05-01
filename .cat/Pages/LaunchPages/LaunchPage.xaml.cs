@@ -1,4 +1,6 @@
-﻿namespace CPL.Pages.LaunchPages;
+﻿using System.Collections.Generic;
+
+namespace CPL.Pages.LaunchPages;
 
 public partial class LaunchPage
 {
@@ -24,33 +26,43 @@ public partial class LaunchPage
 
         var frpciniFilePath = Path.Combine(Paths.IniPath, $"{tunnelName}.ini");
 
-        var jsonObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiTunnel));
+        var parameters = new Dictionary<string, string>
+        {
+            { "token", $"{User.Usertoken}" }
+        };
+        
+        var jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/tunnel", parameters);
 
-        var apiTunnelPath = Path.GetTempFileName();
+        if (jObject == null)
+        {
+            Reminders.Reminder_Box_Show("获取隧道数据失败", "red");
+            return;
+        }
 
-        foreach (var tunnel in jsonObject["data"]!)
+        foreach (var tunnel in jObject["data"]!)
             if (tunnel["name"]?.ToString() == tunnelName)
             {
                 _node = tunnel["node"]?.ToString();
                 break;
             }
 
-        if (
-            await Downloadfiles.Downloadasync(
-                $"https://cf-v2.uapis.cn/tunnel_config?token={User.Usertoken}&node={_node}&tunnel_names={tunnelName}",
-                apiTunnelPath
-            )
-        )
+        parameters = new Dictionary<string, string>
         {
-            jsonObject = JObject.Parse(File.ReadAllText(apiTunnelPath));
-            File.WriteAllText(frpciniFilePath, jsonObject["data"]?.ToString());
-        }
-        else
+            { "token", $"{User.Usertoken}" },
+            {"node",$"{_node}"},
+            {"tunnel_names",$"{tunnelName}"}
+        };
+
+        jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/tunnel_config", parameters);
+        
+        if (jObject == null)
         {
-            Reminders.Reminder_Box_Show("获取API失败", "red");
+            Reminders.Reminder_Box_Show("获取隧道配置失败", "red");
             LaunchButton.Click += Launch;
             return;
         }
+        
+        File.WriteAllText(frpciniFilePath, jObject["data"]?.ToString());
 
         var frpclogFilePath = Path.Combine(Paths.LogPath, $"{tunnelName}.logs");
 

@@ -14,7 +14,7 @@
         </Style>
     </Page.Resources>
 
-    <Border Background="{DynamicResource WhiteColorLight}" CornerRadius="6" Opacity="0.8" Padding="5" Margin="5"
+    <Border Background="{DynamicResource WhiteColorLight}" CornerRadius="6" Opacity="0.8" Padding="10" Margin="5"
             VerticalAlignment="Top">
         <Grid>
             <StackPanel Orientation="Vertical"
@@ -23,134 +23,27 @@
                         Margin="5,5,0,0">
 
                 <TextBlock VerticalAlignment="Top"
-                           FontSize="15"
                            FontWeight="Bold"
                            HorizontalAlignment="Left"
                            Margin="10"
                            Text="账户详情" />
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-
-                    <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Margin="5,0,0,0">
-
-                        <TextBlock Text="邮箱" />
-
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Width="120"
-                                Opacity="0.8"
-                                Height="4" />
-
-                        <TextBlock x:Name="Usermailbox"
-                                   FontSize="12"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
-                    <StackPanel HorizontalAlignment="Center" Orientation="Vertical" Margin="15,0,0,0">
-                        <TextBlock Text="注册时间" />
-
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-
-                        <TextBlock x:Name="UserRegistrationTime"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
-                    <StackPanel HorizontalAlignment="Right" Orientation="Vertical" Margin="15,0,0,0">
-                        <TextBlock Text="QQ" />
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-                        <TextBlock x:Name="UserQq"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
+                    <styles:UserCard x:Name="Usermailbox" FontSize="11" Tag="邮箱" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                    <styles:UserCard x:Name="UserRegistrationTime" Tag="注册时间" HorizontalAlignment="Center" Margin="15,0,0,0"/>
+                    <styles:UserCard x:Name="UserQq" Tag="QQ" HorizontalAlignment="Right" Margin="15,0,0,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
-
-                    <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Margin="5,0,0,0">
-
-                        <TextBlock Text="权限组" />
-
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-
-                        <TextBlock x:Name="Userright"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
-                    <StackPanel HorizontalAlignment="Center" Orientation="Vertical" Margin="15,0,0,0">
-                        <TextBlock Text="到期时间" />
-
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-
-                        <TextBlock x:Name="UserExpirationTime"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
-                    <StackPanel HorizontalAlignment="Right" Orientation="Vertical" Margin="15,0,0,0">
-                        <TextBlock Text="实名状态" />
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-                        <TextBlock x:Name="UserRealNameStatus"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
+                    <styles:UserCard x:Name="Userright" Tag="权限组" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                    <styles:UserCard x:Name="UserExpirationTime" Tag="到期时间" HorizontalAlignment="Center" Margin="15,0,0,0"/>
+                    <styles:UserCard x:Name="UserRealNameStatus" Tag="实名状态" HorizontalAlignment="Right" Margin="15,0,0,0"/>
                 </StackPanel>
+                
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
-
-                    <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Margin="5,0,0,0">
-
-                        <TextBlock Text="剩余积分" />
-
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-
-                        <TextBlock x:Name="UserPointsRemaining"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
-                    <StackPanel HorizontalAlignment="Center" Orientation="Vertical" Margin="15,0,0,0">
-                        <TextBlock Text="隧道限制" />
-
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-
-                        <TextBlock x:Name="UserTunnelRestrictions"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
-                    <StackPanel HorizontalAlignment="Right" Orientation="Vertical" Margin="15,0,0,0">
-                        <TextBlock Text="带宽限制" />
-                        <Border CornerRadius="2,2,2,2"
-                                Background="{DynamicResource ThemeColor}"
-                                Opacity="0.8"
-                                Width="120"
-                                Height="4" />
-                        <TextBlock x:Name="UserBandwidthThrottling"
-                                   Text="我是擎天柱" />
-                    </StackPanel>
-
+                    <styles:UserCard x:Name="UserPointsRemaining" Tag="剩余积分" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                    <styles:UserCard x:Name="UserTunnelRestrictions" Tag="隧道限制" HorizontalAlignment="Center" Margin="15,0,0,0"/>
+                    <styles:UserCard x:Name="UserBandwidthThrottling" FontSize="12" Tag="带宽限制" HorizontalAlignment="Right" Margin="15,0,0,0"/>
                 </StackPanel>
             </StackPanel>
 

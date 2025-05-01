@@ -20,32 +20,30 @@ public partial class ReminderInterfaceShow
     public async void Update(object sender, RoutedEventArgs e)
     {
         Visibility = Visibility.Collapsed;
-
-        var jObject = JObject.Parse(File.ReadAllText(Paths.Temp.TempApiLogin));
-
-        await Task.Delay(1000);
+        
+        var jObject = await Downloadfiles.GetApi("http://cat.chmlfrp.com/update/update.json");
 
         var exe = Path.Combine(
             Paths.DataPath,
             "CPL.exe"
         );
 
-        if (Downloadfiles.Download(jObject["url"]?.ToString(), exe))
+        if (await Downloadfiles.Downloadasync(jObject["url"]?.ToString(), exe))
         {
             Reminders.Reminder_Box_Show("下载成功");
             Reminders.LogsOutputting("下载成功");
 
             var processPath = Process.GetCurrentProcess().MainModule?.FileName;
             var batchContent =
-                $"""timeout /t 3 /nobreak & move /y "{exe}" "{processPath}" & start "" "{processPath}" & exit""";
+                $"""timeout /t 1 /nobreak & move /y "{exe}" "{processPath}" & start "" "{processPath}" & exit""";
             var process = new Process();
             ProcessStartInfo processInfo = new(
                 "cmd.exe",
                 $"/c {batchContent}"
             )
             {
-                UseShellExecute = true,
-                CreateNoWindow = false
+                UseShellExecute = false,
+                CreateNoWindow = true
             };
             process.StartInfo = processInfo;
             process.Start();
