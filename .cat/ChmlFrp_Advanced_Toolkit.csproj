@@ -4,7 +4,7 @@
         <UseWPF>true</UseWPF>
         <OutputType>WinExe</OutputType>
         <LangVersion>latest</LangVersion>
-        <FileVersion>0.0.1.5</FileVersion>
+        <FileVersion>0.0.2.1</FileVersion>
         <TargetFramework>net48</TargetFramework>
         <AssemblyVersion>0.0.2</AssemblyVersion>
         <ApplicationIcon>Icons\logo.ico</ApplicationIcon>
@@ -13,7 +13,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Net.Http"/>
+        <PackageReference Include="ini-parser" Version="2.5.2" />
         <PackageReference Include="Costura.Fody" Version="6.0.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>

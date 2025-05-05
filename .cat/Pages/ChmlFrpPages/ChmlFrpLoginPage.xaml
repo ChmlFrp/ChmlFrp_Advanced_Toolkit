@@ -1,7 +1,7 @@
-﻿<Page x:Class="CPL.Pages.ChmlFrpPages.ChmlFrpLoginPage"
+﻿<Page x:Class="CAT.Pages.ChmlFrpPages.ChmlFrpLoginPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:styles="clr-namespace:CPL.Styles">
+      xmlns:styles="clr-namespace:CAT.Styles">
 
     <Grid>
         <Border CornerRadius="6,6,6,6"

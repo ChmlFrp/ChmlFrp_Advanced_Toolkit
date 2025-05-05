@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CPL.Pages.LaunchPages;
+namespace CAT.Pages.LaunchPages;
 
 public partial class LaunchPage
 {
@@ -10,6 +10,7 @@ public partial class LaunchPage
     public LaunchPage()
     {
         InitializeComponent();
+        LoadResources("CAT.LaunchingUserControl", PluginGrid, PluginBorder);
     }
 
     private async void Launch(object sender, RoutedEventArgs e)
@@ -30,7 +31,7 @@ public partial class LaunchPage
         {
             { "token", $"{User.Usertoken}" }
         };
-        
+
         var jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/tunnel", parameters);
 
         if (jObject == null)
@@ -49,19 +50,19 @@ public partial class LaunchPage
         parameters = new Dictionary<string, string>
         {
             { "token", $"{User.Usertoken}" },
-            {"node",$"{_node}"},
-            {"tunnel_names",$"{tunnelName}"}
+            { "node", $"{_node}" },
+            { "tunnel_names", $"{tunnelName}" }
         };
 
         jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/tunnel_config", parameters);
-        
+
         if (jObject == null)
         {
             Reminders.Reminder_Box_Show("获取隧道配置失败", "red");
             LaunchButton.Click += Launch;
             return;
         }
-        
+
         File.WriteAllText(frpciniFilePath, jObject["data"]?.ToString());
 
         var frpclogFilePath = Path.Combine(Paths.LogPath, $"{tunnelName}.logs");

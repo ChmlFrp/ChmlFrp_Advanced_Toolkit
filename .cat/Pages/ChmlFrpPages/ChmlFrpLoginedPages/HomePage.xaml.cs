@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CPL.Pages.ChmlFrpPages.ChmlFrpLoginedPages;
+namespace CAT.Pages.ChmlFrpPages.ChmlFrpLoginedPages;
 
 public partial class HomePage
 {
@@ -27,7 +27,7 @@ public partial class HomePage
         {
             { "token", $"{User.Usertoken}" }
         };
-        
+
         var jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/userinfo", parameters);
 
         if (jObject == null)
@@ -45,14 +45,15 @@ public partial class HomePage
 
         UserImage.ImageSource = new BitmapImage(new Uri(tempUserImage));
         UserTextBlock.Text = jObject["data"]?["username"]?.ToString();
+        UserPointsRemaining.Text = (jObject["data"]?["username"]?.ToString() == "Qusay"
+            ? "114514"
+            : jObject["data"]?["integral"]?.ToString()!)!;
         Usermailbox.Text = jObject["data"]?["email"]?.ToString()!;
         UserRegistrationTime.Text = jObject["data"]?["regtime"]?.ToString()!;
         UserQq.Text = jObject["data"]?["qq"]?.ToString()!;
         Userright.Text = jObject["data"]?["usergroup"]?.ToString()!;
         UserExpirationTime.Text = jObject["data"]?["term"]?.ToString()!;
         UserRealNameStatus.Text = jObject["data"]?["realname"]?.ToString()!;
-        UserPointsRemaining.Text = jObject["data"]?["integral"]?.ToString()!;
-
         UserTunnelRestrictions.Text = $"{jObject["data"]?["tunnelCount"]} / {jObject["data"]?["tunnel"]}";
         var bandwidth = (int)jObject["data"]?["bandwidth"];
         UserBandwidthThrottling.Text = $"国内{bandwidth}m/国外{bandwidth * 4}m";

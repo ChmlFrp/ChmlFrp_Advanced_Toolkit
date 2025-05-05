@@ -1,17 +1,25 @@
-﻿namespace CPL.Pages.SettingPages;
+﻿using ChmlFrp_Advanced_Toolkit.Pages.SettingPages;
+
+namespace CAT.Pages.SettingPages;
 
 public partial class SettingHomePage
 {
-    private readonly BlankPage _blankPage = new();
+    private readonly PersonalizationPage _personalizationPage = new();
+    private readonly AboutMePage _aboutMePage = new();
 
     public SettingHomePage()
     {
         InitializeComponent();
-        ButtonBase_OnClick(null, null);
+        NavigatePersonalizationPageClick(null, null);
     }
 
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    private void NavigatePersonalizationPageClick(object sender, RoutedEventArgs e)
     {
-        PagesNavigation.Navigate(_blankPage);
+        PagesNavigation.Navigate(_personalizationPage);
+    }
+
+    private void NavigateAboutMePageClick(object sender, RoutedEventArgs e)
+    {
+        PagesNavigation.Navigate(_aboutMePage);
     }
 }

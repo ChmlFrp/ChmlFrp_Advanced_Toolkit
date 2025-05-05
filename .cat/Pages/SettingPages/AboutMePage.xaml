@@ -1,0 +1,57 @@
+﻿<Page x:Class="ChmlFrp_Advanced_Toolkit.Pages.SettingPages.AboutMePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:styles="clr-namespace:CAT.Styles">
+
+    <ScrollViewer>
+        <StackPanel VerticalAlignment="Top" Orientation="Vertical">
+            <styles:Card
+                ImageSource="https://q.qlogo.cn/headimg_dl?dst_uin=2976779544&amp;spec=640&amp;img_type=jpg"
+                Title="Qusay 这个是我a，CAT启动器作者&#x0a;     代码都是他一个人敲的www"
+                TagText="QQ:2976779544" />
+            <styles:Card
+                ImageSource="https://q.qlogo.cn/headimg_dl?dst_uin=242247494&amp;spec=640&amp;img_type=jpg"
+                Title="chaoji 这个是吉祥物,chmlfrp的创始人(特性：永远3岁)&#x0a;     感谢送我永久超级会员QAQ"
+                TagText="QQ:242247494" />
+            <styles:Card
+                ImageSource="https://q.qlogo.cn/headimg_dl?dst_uin=1972403603&amp;spec=640&amp;img_type=jpg"
+                Title="boringstudent 这个是同行a,CUL启动器作者&#x0a;     经常一起唠嗑QwQ"
+                TagText="QQ:1972403603" />
+            <styles:Card
+                ImageSource="https://q.qlogo.cn/headimg_dl?dst_uin=251104925&amp;spec=640&amp;img_type=jpg"
+                Title="fengxiang 这个是同行a,XCL启动器作者&#x0a;     最早写启动器的，提出了很多建议&#x0a;     还编写了API文档，方便开发者"
+                TagText="QQ:251104925" />
+            
+            <Border Height="100" Margin="5" CornerRadius="6" Opacity="0.8" Background="{DynamicResource WhiteColorLight}">
+                <Grid>
+                    <Label 
+                        Margin="5"
+                        Content="关于项目"
+                        FontWeight="Bold"
+                        FontSize="15"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"/>
+                    
+                    <StackPanel Margin="0,15,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <styles:CornerButton 
+                            IsSelected="True"
+                            FontSize="15"
+                            Width="250"
+                            Height="45"
+                            Click="Github_Click"
+                            Content="点击查看Github仓库"/>
+                        
+                        <styles:CornerButton 
+                            IsSelected="True"
+                            Margin="15,0,0,0"
+                            FontSize="15"
+                            Width="250"
+                            Height="45"
+                            Click="ButtonBase_OnClick"
+                            Content="点击查看软件版本信息"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

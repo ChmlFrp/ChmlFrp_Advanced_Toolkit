@@ -1,18 +1,7 @@
-﻿<Page x:Class="CPL.Pages.ChmlFrpPages.ChmlFrpLoginedPages.HomePage"
+﻿<Page x:Class="CAT.Pages.ChmlFrpPages.ChmlFrpLoginedPages.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:styles="clr-namespace:CPL.Styles">
-
-    <Page.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="FontFamily" Value="Microsoft YaHei" />
-        </Style>
-    </Page.Resources>
+      xmlns:styles="clr-namespace:CAT.Styles">
 
     <Border Background="{DynamicResource WhiteColorLight}" CornerRadius="6" Opacity="0.8" Padding="10" Margin="5"
             VerticalAlignment="Top">
@@ -25,25 +14,33 @@
                 <TextBlock VerticalAlignment="Top"
                            FontWeight="Bold"
                            HorizontalAlignment="Left"
-                           Margin="10"
+                           Margin="5"
+                           FontSize="15"
                            Text="账户详情" />
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <styles:UserCard x:Name="Usermailbox" FontSize="11" Tag="邮箱" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                    <styles:UserCard x:Name="UserRegistrationTime" Tag="注册时间" HorizontalAlignment="Center" Margin="15,0,0,0"/>
-                    <styles:UserCard x:Name="UserQq" Tag="QQ" HorizontalAlignment="Right" Margin="15,0,0,0"/>
+                    <styles:UserCard x:Name="Usermailbox" FontSize="11" Tag="邮箱" HorizontalAlignment="Left"
+                                     Margin="5,0,0,0" />
+                    <styles:UserCard x:Name="UserRegistrationTime" Tag="注册时间" HorizontalAlignment="Center"
+                                     Margin="15,0,0,0" />
+                    <styles:UserCard x:Name="UserQq" Tag="QQ" HorizontalAlignment="Right" Margin="15,0,0,0" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
-                    <styles:UserCard x:Name="Userright" Tag="权限组" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                    <styles:UserCard x:Name="UserExpirationTime" Tag="到期时间" HorizontalAlignment="Center" Margin="15,0,0,0"/>
-                    <styles:UserCard x:Name="UserRealNameStatus" Tag="实名状态" HorizontalAlignment="Right" Margin="15,0,0,0"/>
+                    <styles:UserCard x:Name="Userright" Tag="权限组" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                    <styles:UserCard x:Name="UserExpirationTime" Tag="到期时间" HorizontalAlignment="Center"
+                                     Margin="15,0,0,0" />
+                    <styles:UserCard x:Name="UserRealNameStatus" Tag="实名状态" HorizontalAlignment="Right"
+                                     Margin="15,0,0,0" />
                 </StackPanel>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
-                    <styles:UserCard x:Name="UserPointsRemaining" Tag="剩余积分" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                    <styles:UserCard x:Name="UserTunnelRestrictions" Tag="隧道限制" HorizontalAlignment="Center" Margin="15,0,0,0"/>
-                    <styles:UserCard x:Name="UserBandwidthThrottling" FontSize="12" Tag="带宽限制" HorizontalAlignment="Right" Margin="15,0,0,0"/>
+                    <styles:UserCard x:Name="UserPointsRemaining" Tag="剩余积分" HorizontalAlignment="Left"
+                                     Margin="5,0,0,0" />
+                    <styles:UserCard x:Name="UserTunnelRestrictions" Tag="隧道限制" HorizontalAlignment="Center"
+                                     Margin="15,0,0,0" />
+                    <styles:UserCard x:Name="UserBandwidthThrottling" FontSize="12" Tag="带宽限制"
+                                     HorizontalAlignment="Right" Margin="15,0,0,0" />
                 </StackPanel>
             </StackPanel>
 
@@ -62,7 +59,9 @@
                 </Ellipse>
 
                 <TextBlock x:Name="UserTextBlock"
+                           Margin="5"
                            FontStyle="Italic"
+                           HorizontalAlignment="Center"
                            FontSize="20" Text="Qusay" />
 
                 <styles:CornerButton x:Name="Token"
@@ -70,7 +69,6 @@
                                      CornerRadius="4"
                                      Click="TokenClick"
                                      Height="35"
-                                     FontFamily="Microsoft YaHei"
                                      Content="点击查看Token" />
             </StackPanel>
         </Grid>

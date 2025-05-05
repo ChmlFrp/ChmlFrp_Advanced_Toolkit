@@ -1,4 +1,4 @@
-﻿namespace CPL.Pages.ChmlFrpPages;
+﻿namespace CAT.Pages.ChmlFrpPages;
 
 public partial class ChmlFrpHomePage
 {

@@ -1,0 +1,23 @@
+﻿<Page x:Class="ChmlFrp_Advanced_Toolkit.Pages.SettingPages.PersonalizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <StackPanel VerticalAlignment="Top" Orientation="Vertical">
+        <Border Height="100" Padding="5" Margin="5" CornerRadius="6" Opacity="0.8" Background="{DynamicResource WhiteColorLight}">
+            <Grid>
+                <Label 
+                    Margin="5"
+                    Content="主题更改"
+                    FontWeight="Bold"
+                    FontSize="15"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"/>
+                
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <RadioButton Click="ChmlFrp_Click" x:Name="ChmlFrpButton" Content="ChmlFrp蓝" Background="#116fce" Style="{StaticResource DynamicBorderRadioButtonStyle}"/>
+                    <RadioButton  Margin="5" Click="Chaoji_Click" x:Name="ChaojiButton" Content="Chaoji橙" Background="#F9A640" Style="{StaticResource DynamicBorderRadioButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </StackPanel>
+</Page>

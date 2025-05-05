@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
 
-namespace CPL;
+namespace CAT;
 
-internal abstract class MainClass
+public abstract class MainClass
 {
     public static MainWindow MainWindowClass;
 
@@ -22,7 +22,7 @@ internal abstract class MainClass
     internal static class PagesClass
     {
         public static ChmlFrpHomePage ChmlFrpHomePage;
-        public static readonly LaunchPage LaunchPage = new();
+        public static LaunchPage LaunchPage;
     }
 
     public abstract class Paths
@@ -33,8 +33,10 @@ internal abstract class MainClass
 
         public static readonly string IniPath = Path.Combine(DataPath, "Inis");
         public static readonly string LogPath = Path.Combine(DataPath, "Logs");
+        public static readonly string Plugin = Path.Combine(DataPath, "Plugins");
         public static readonly string FrpExePath = Path.Combine(DataPath, "frpc.exe");
         public static readonly string PicturesPath = Path.Combine(DataPath, "Pictures");
+        public static readonly string InifilePath = Path.Combine(DataPath, "CAT_Config.ini");
         public static readonly string LogfilePath = Path.Combine(DataPath, "Debug-CAT.logs");
 
         public static bool IsOccupied(string filePath)
@@ -88,31 +90,8 @@ internal abstract class MainClass
         }
     }
 
-    internal static class Downloadfiles
+    public static class Downloadfiles
     {
-        public static bool Download(string url, string path)
-        {
-            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
-            {
-                Reminders.LogsOutputting("下载失败：NullOrWhiteSpace");
-                return false;
-            }
-
-            try
-            {
-                using WebClient client = new();
-                client.Encoding = Encoding.UTF8;
-                client.DownloadFile(new Uri(url), path);
-            }
-            catch
-            {
-                Reminders.LogsOutputting($"下载失败：文件占用或网络错误?&url={url}");
-                return false;
-            }
-
-            return true;
-        }
-
         public static async Task<bool> Downloadasync(string url, string path)
         {
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(path))
@@ -136,12 +115,10 @@ internal abstract class MainClass
             return true;
         }
 
-        public static async Task<JObject> GetApi(string url,Dictionary<string, string> parameters = null)
+        public static async Task<JObject> GetApi(string url, Dictionary<string, string> parameters = null)
         {
             if (parameters != null)
-            {
                 url = $"{url}?{string.Join("&", parameters.Select(pair => $"{pair.Key}={pair.Value}"))}";
-            }
 
             try
             {
@@ -156,8 +133,8 @@ internal abstract class MainClass
                 Reminders.LogsOutputting($"请求错误: {ex.Message}");
                 return null;
             }
-        } 
-        
+        }
+
         public static async Task<bool> GetApItoLogin(bool isRemind = true, string name = "", string password = "")
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(password))
@@ -165,13 +142,13 @@ internal abstract class MainClass
                 password = User.Password;
                 name = User.Username;
             }
-            
+
             var parameters = new Dictionary<string, string>
             {
                 { "username", $"{name}" },
                 { "password", $"{password}" }
             };
-            
+
             var jObject = await GetApi("https://cf-v2.uapis.cn/login", parameters);
 
             if (jObject == null)
@@ -179,7 +156,7 @@ internal abstract class MainClass
                 if (isRemind) Reminders.Reminder_Box_Show("网络错误", "red");
                 return false;
             }
-            
+
             var msg = jObject["msg"]?.ToString();
             Reminders.LogsOutputting("API提醒：" + msg);
             if (msg != "登录成功")
@@ -196,7 +173,7 @@ internal abstract class MainClass
         }
     }
 
-    internal static class Reminders
+    public static class Reminders
     {
         private static readonly ReminderBoxShow Rbsw = new();
         private static readonly ReminderInterfaceShow Risw = new();
@@ -293,6 +270,34 @@ internal abstract class MainClass
         }
     }
 
+    public static void LoadResources(string typename, Grid pluginGrid, Border pluginBorder)
+    {
+        var dependencyDlls = Directory.GetFiles(Paths.Plugin, "*.dll")
+            .Where(f => !Path.GetFileName(f).Contains("Plugin"))
+            .ToList();
+
+        var pluginDlls = Directory.GetFiles(Paths.Plugin, "*.dll")
+            .Where(f => Path.GetFileName(f).Contains("Plugin"))
+            .ToList();
+
+        if (pluginDlls.Count == 0) return;
+
+        foreach (var dep in dependencyDlls) Assembly.LoadFrom(dep);
+        foreach (var plugin in pluginDlls)
+            try
+            {
+                var asm = Assembly.LoadFrom(plugin);
+                var type = asm.GetType(typename);
+                if (type == null || !typeof(UserControl).IsAssignableFrom(type)) continue;
+                pluginBorder.Visibility = Visibility.Visible;
+                pluginGrid.Children.Add((UserControl)Activator.CreateInstance(type));
+            }
+            catch (Exception ex)
+            {
+                Reminders.Reminder_Box_Show($"加载插件时发生错误:{ex.Message}", "red");
+            }
+    }
+
     internal static class Initialize
     {
         public static void InitializeNext()
@@ -324,6 +329,7 @@ internal abstract class MainClass
                 Directory.CreateDirectory(Paths.LogPath);
                 Directory.CreateDirectory(Paths.PicturesPath);
                 Directory.CreateDirectory(Paths.IniPath);
+                Directory.CreateDirectory(Paths.Plugin);
                 File.WriteAllText(Paths.LogfilePath, string.Empty);
             }
             catch
@@ -351,7 +357,7 @@ internal abstract class MainClass
                 if (isRemind) Reminders.Reminder_Box_Show("更新失败", "red");
                 Reminders.LogsOutputting("更新失败");
             }
-            
+
             if (jObject!["version"]?.ToString() == Assembly.GetExecutingAssembly().GetName().Version.ToString())
             {
                 if (isRemind) Reminders.Reminder_Box_Show("已是最新版本");

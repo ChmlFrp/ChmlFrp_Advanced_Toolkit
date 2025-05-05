@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <UseWPF>true</UseWPF>
+        <OutputType>Library</OutputType>
+        <LangVersion>latest</LangVersion>
+        <AssemblyName>CATPlugin</AssemblyName>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Emoji.Wpf" Version="0.3.4"/>
+        <ProjectReference Include="..\.cat\ChmlFrp_Advanced_Toolkit.csproj"/>
+    </ItemGroup>
+
+</Project>

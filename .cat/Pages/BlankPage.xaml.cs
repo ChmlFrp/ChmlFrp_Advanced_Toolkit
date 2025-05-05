@@ -1,4 +1,4 @@
-﻿namespace CPL.Pages;
+﻿namespace CAT.Pages;
 
 public partial class BlankPage
 {

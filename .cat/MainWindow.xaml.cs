@@ -1,4 +1,4 @@
-﻿namespace CPL;
+﻿namespace CAT;
 
 public partial class MainWindow
 {
@@ -16,7 +16,7 @@ public partial class MainWindow
     {
         StartWindow startWindow = new();
         startWindow.ShowDialog();
-        Visibility = Visibility.Visible;    
+        Visibility = Visibility.Visible;
     }
 
     public void NavigateChmlfrpPage(object sender, RoutedEventArgs e)

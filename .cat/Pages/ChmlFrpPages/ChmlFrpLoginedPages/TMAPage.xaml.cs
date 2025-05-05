@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace CPL.Pages.ChmlFrpPages.ChmlFrpLoginedPages;
+namespace CAT.Pages.ChmlFrpPages.ChmlFrpLoginedPages;
 
 public partial class TmaPage
 {
@@ -21,7 +21,7 @@ public partial class TmaPage
         {
             { "token", $"{User.Usertoken}" }
         };
-        
+
         var jObject = await Downloadfiles.GetApi("https://cf-v2.uapis.cn/tunnel", parameters);
 
         if (jObject == null || jObject["msg"]?.ToString() != "获取隧道数据成功")
@@ -37,14 +37,14 @@ public partial class TmaPage
     private void DisplayTunnels()
     {
         PagesClass.LaunchPage.ComboBox.Items.Clear();
-        
+
         foreach (var tunnel in _tunnels) PagesClass.LaunchPage.ComboBox.Items.Add(tunnel["name"]!.ToString());
 
         MainGrid.Children.Clear();
-        
+
         var displayTunnels = _tunnels.Skip((_currentPage - 1) * TunnelsPerPage).Take(TunnelsPerPage);
         var index = 1;
-        
+
         foreach (var tunnel in displayTunnels)
         {
             var tunnelid = tunnel["id"]?.ToString();

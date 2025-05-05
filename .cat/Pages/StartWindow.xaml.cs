@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-namespace CPL.Pages;
+namespace CAT.Pages;
 
 public partial class StartWindow
 {
@@ -24,14 +24,15 @@ public partial class StartWindow
         window.ShowInTaskbar = false;
         var hWnd = new WindowInteropHelper(window).Handle;
         SetWindowPos(hWnd, HwndTopmost, 0, 0, 0, 0, SwpNomove | SwpNosize);
-        
+
         Initialize.InitializeFirst();
-        if (!await Downloadfiles.GetApItoLogin(false)) 
+        if (!await Downloadfiles.GetApItoLogin(false))
             MainWindowClass.ChmlFrpLoginPage = new ChmlFrpLoginPage();
         PagesClass.ChmlFrpHomePage = new();
+        PagesClass.LaunchPage = new();
         Initialize.InitializeNext();
-        MainWindowClass.NavigateLaunching(null,null);
-        
+        MainWindowClass.NavigateLaunching(null, null);
+
         await Task.Delay(1000);
         Close();
     }

@@ -1,4 +1,4 @@
-﻿namespace CPL.Pages.ReminderPages;
+﻿namespace CAT.Pages.ReminderPages;
 
 public partial class ReminderDownloadShow
 {

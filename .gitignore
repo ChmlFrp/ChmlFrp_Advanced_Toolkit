@@ -1,7 +1,6 @@
 # Running cache files
 *obj
 *bin
-*.sln
 *.xsd
 *.user
 

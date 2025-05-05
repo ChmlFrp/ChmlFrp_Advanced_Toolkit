@@ -1,4 +1,4 @@
-﻿namespace CPL.Styles;
+﻿namespace CAT.Styles;
 
 public class CornerIconRadioButton : RadioButton
 {
@@ -151,3 +151,38 @@ public class CornerTunnelTextBox : CornerTextBlock
 }
 
 public class UserCard : TextBox;
+
+public class Card : Control
+{
+    static Card()
+    {
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(Card), new FrameworkPropertyMetadata(typeof(Card)));
+    }
+
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(nameof(Title), typeof(string), typeof(Card), new PropertyMetadata(""));
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    public static readonly DependencyProperty TagTextProperty =
+        DependencyProperty.Register(nameof(TagText), typeof(string), typeof(Card), new PropertyMetadata(""));
+
+    public string TagText
+    {
+        get => (string)GetValue(TagTextProperty);
+        set => SetValue(TagTextProperty, value);
+    }
+
+    public static readonly DependencyProperty ImageSourceProperty =
+        DependencyProperty.Register(nameof(ImageSource), typeof(ImageSource), typeof(Card), new PropertyMetadata(null));
+
+    public ImageSource ImageSource
+    {
+        get => (ImageSource)GetValue(ImageSourceProperty);
+        set => SetValue(ImageSourceProperty, value);
+    }
+}

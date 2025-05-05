@@ -1,4 +1,4 @@
-﻿namespace CPL.Pages.ReminderPages;
+﻿namespace CAT.Pages.ReminderPages;
 
 public partial class ReminderInterfaceShow
 {
@@ -20,12 +20,12 @@ public partial class ReminderInterfaceShow
     public async void Update(object sender, RoutedEventArgs e)
     {
         Visibility = Visibility.Collapsed;
-        
+
         var jObject = await Downloadfiles.GetApi("http://cat.chmlfrp.com/update/update.json");
 
         var exe = Path.Combine(
             Paths.DataPath,
-            "CPL.exe"
+            "CAT.exe"
         );
 
         if (await Downloadfiles.Downloadasync(jObject["url"]?.ToString(), exe))
