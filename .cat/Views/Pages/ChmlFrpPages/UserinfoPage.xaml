@@ -1,0 +1,75 @@
+<Page x:Class="CAT.Views.Pages.ChmlFrpPages.UserinfoPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:styles="clr-namespace:CAT.Views.Windows.Styles">
+
+    <Border Background="{DynamicResource WhiteColorLight}" CornerRadius="6" Opacity="0.8" Padding="10" Margin="5"
+            VerticalAlignment="Top">
+        <Grid>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="5,5,0,0">
+
+                <TextBlock VerticalAlignment="Top"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Left"
+                           Margin="5"
+                           FontSize="15"
+                           Text="账户详情" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <styles:UserCard x:Name="EmailCard" FontSize="11" Tag="邮箱" HorizontalAlignment="Left"
+                                     Margin="5,0,0,0" />
+                    <styles:UserCard x:Name="RegtimeCard" Tag="注册时间" HorizontalAlignment="Center"
+                                     Margin="15,0,0,0" />
+                    <styles:UserCard x:Name="QqCard" Tag="QQ" HorizontalAlignment="Right" Margin="15,0,0,0" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
+                    <styles:UserCard x:Name="UsergroupCard" Tag="权限组" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                    <styles:UserCard x:Name="TermCard" Tag="到期时间" HorizontalAlignment="Center"
+                                     Margin="15,0,0,0" />
+                    <styles:UserCard x:Name="UserRealNameStatus" Tag="实名状态" HorizontalAlignment="Right"
+                                     Margin="15,0,0,0" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
+                    <styles:UserCard x:Name="IntegralCard" Tag="剩余积分" HorizontalAlignment="Left"
+                                     Margin="5,0,0,0" />
+                    <styles:UserCard x:Name="UserTunnelRestrictions" Tag="隧道限制" HorizontalAlignment="Center"
+                                     Margin="15,0,0,0" />
+                    <styles:UserCard x:Name="UserBandwidthThrottling" FontSize="12" Tag="带宽限制"
+                                     HorizontalAlignment="Right" Margin="15,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,15,0">
+
+                <Ellipse Margin="10,5,10,0"
+                         Height="150" Width="150"
+                         HorizontalAlignment="Center">
+                    <Ellipse.Fill>
+                        <ImageBrush x:Name="UserImage"
+                                    Stretch="UniformToFill" />
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <TextBlock x:Name="UsernameBlock"
+                           Margin="5"
+                           FontStyle="Italic"
+                           HorizontalAlignment="Center"
+                           FontSize="20" Text="Qusay" />
+
+                <styles:CornerButton x:Name="Token"
+                                     CornerRadius="4"
+                                     Click="TokenClick"
+                                     Height="35"
+                                     Content="点击查看Token" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Page>

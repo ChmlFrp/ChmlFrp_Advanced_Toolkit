@@ -1,4 +1,7 @@
-﻿namespace CAT.Styles;
+﻿using System.Windows.Controls;
+using System.Windows.Media;
+
+namespace CAT.Views.Windows.Styles;
 
 public class CornerIconRadioButton : RadioButton
 {
@@ -23,24 +26,11 @@ public class CornerButton : Button
     public static readonly DependencyProperty CornerRadiusProperty =
         DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(CornerButton));
 
-    public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
-        nameof(IsSelected),
-        typeof(bool),
-        typeof(CornerButton)
-    );
-
     //CornerRadius
     public CornerRadius CornerRadius
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
-    }
-
-    //IsSelected
-    public bool IsSelected
-    {
-        get => (bool)GetValue(IsSelectedProperty);
-        set => SetValue(IsSelectedProperty, value);
     }
 }
 
@@ -58,13 +48,6 @@ public sealed class CornerTextBox : TextBox
     public static readonly DependencyProperty PostscriptProperty = DependencyProperty.Register(
         nameof(Postscript),
         typeof(string),
-        typeof(CornerTextBox)
-    );
-
-    //IsPassword
-    public static readonly DependencyProperty IsPasswordProperty = DependencyProperty.Register(
-        nameof(IsPassword),
-        typeof(bool),
         typeof(CornerTextBox)
     );
 
@@ -87,12 +70,6 @@ public sealed class CornerTextBox : TextBox
         set => SetValue(PostscriptProperty, value);
     }
 
-    public bool IsPassword
-    {
-        get => (bool)GetValue(IsPasswordProperty);
-        set => SetValue(IsPasswordProperty, value);
-    }
-
     private void OnTextChanged(object sender, TextChangedEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(_tempText)) _tempText = Postscript;
@@ -109,11 +86,27 @@ public class CornerComboBox : ComboBox
             typeof(CornerComboBox)
         );
 
+    // HasSelection
+    public static readonly DependencyProperty HasSelectionProperty =
+        DependencyProperty.Register(nameof(HasSelection), typeof(bool), typeof(CornerComboBox));
+
     // CornerRadius
     public CornerRadius CornerRadius
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
+    }
+
+    public bool HasSelection
+    {
+        get => (bool)GetValue(HasSelectionProperty);
+        private set => SetValue(HasSelectionProperty, value);
+    }
+
+    protected override void OnSelectionChanged(SelectionChangedEventArgs e)
+    {
+        base.OnSelectionChanged(e);
+        HasSelection = SelectedIndex >= 0;
     }
 }
 
@@ -154,13 +147,19 @@ public class UserCard : TextBox;
 
 public class Card : Control
 {
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(nameof(Title), typeof(string), typeof(Card), new PropertyMetadata(""));
+
+    public static readonly DependencyProperty TagTextProperty =
+        DependencyProperty.Register(nameof(TagText), typeof(string), typeof(Card), new PropertyMetadata(""));
+
+    public static readonly DependencyProperty ImageSourceProperty =
+        DependencyProperty.Register(nameof(ImageSource), typeof(ImageSource), typeof(Card), new PropertyMetadata(null));
+
     static Card()
     {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(Card), new FrameworkPropertyMetadata(typeof(Card)));
     }
-
-    public static readonly DependencyProperty TitleProperty =
-        DependencyProperty.Register(nameof(Title), typeof(string), typeof(Card), new PropertyMetadata(""));
 
     public string Title
     {
@@ -168,17 +167,11 @@ public class Card : Control
         set => SetValue(TitleProperty, value);
     }
 
-    public static readonly DependencyProperty TagTextProperty =
-        DependencyProperty.Register(nameof(TagText), typeof(string), typeof(Card), new PropertyMetadata(""));
-
     public string TagText
     {
         get => (string)GetValue(TagTextProperty);
         set => SetValue(TagTextProperty, value);
     }
-
-    public static readonly DependencyProperty ImageSourceProperty =
-        DependencyProperty.Register(nameof(ImageSource), typeof(ImageSource), typeof(Card), new PropertyMetadata(null));
 
     public ImageSource ImageSource
     {

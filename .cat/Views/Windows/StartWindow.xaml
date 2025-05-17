@@ -1,0 +1,15 @@
+﻿<Window x:Class="CAT.Views.Windows.Views.Windows.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent"
+        Width="150"
+        Height="150"
+        AllowsTransparency="True"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowState="Normal">
+    <Path Data="{DynamicResource Logo}" Fill="#116fce" Stretch="Fill" />
+</Window>

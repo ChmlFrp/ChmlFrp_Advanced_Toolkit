@@ -1,0 +1,37 @@
+﻿<Page x:Class="CAT.Views.Pages.ChmlFrpPages.ChmlFrpHomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Border Opacity="0.8"
+                    Background="{DynamicResource WhiteColorLight}"
+                    CornerRadius="0,0,0,5" />
+        </Grid>
+        <StackPanel Grid.Column="0"
+                    VerticalAlignment="Top"
+                    Orientation="Vertical">
+            <RadioButton IsChecked="True"
+                         Content="用户管理"
+                         Style="{DynamicResource MenuRadioButtonStyle}"
+                         Tag="{DynamicResource Home}"
+                         Click="rdLaunchPage_Click" />
+
+            <RadioButton Tag="{DynamicResource Tma}"
+                         Click="rdTMA_Click"
+                         FontWeight="Bold"
+                         Content="隧道管理"
+                         Style="{DynamicResource MenuRadioButtonStyle}" />
+        </StackPanel>
+        <Grid Grid.Column="1">
+            <Border CornerRadius="0,0,10,10">
+                <Frame x:Name="PagesNavigation"
+                       NavigationUIVisibility="Hidden" />
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

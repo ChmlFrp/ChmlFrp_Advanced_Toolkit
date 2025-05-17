@@ -1,0 +1,103 @@
+﻿<Window x:Class="CAT.Views.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:styles="clr-namespace:CAT.Views.Windows.Styles"
+        Height="430" Width="780"
+        MaxWidth="1000" MaxHeight="550"
+        MinWidth="780" MinHeight="430"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowState="Normal"
+        Visibility="Collapsed"
+        Title="ChmlFrp Advanced Toolkit">
+
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Border CornerRadius="6,6,0,0"
+                    Grid.Row="0"
+                    MouseLeftButtonDown="DragMoveThis"
+                    Height="50"
+                    Background="{DynamicResource ThemeColor}">
+                <Grid>
+                    <Path Data="{DynamicResource Logo}"
+                          Stretch="Fill"
+                          Fill="{DynamicResource WhiteColorLight}"
+                          Margin="15,0,0,0"
+                          Width="35"
+                          Height="35"
+                          HorizontalAlignment="Left" />
+
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+
+                            <styles:CornerIconRadioButton IsChecked="True"
+                                                          Margin="0,0,5,0"
+                                                          Data="{DynamicResource Home}"
+                                                          Content="启动"
+                                                          x:Name="LaunchPageButton"
+                                                          Click="NavigateLaunching" />
+
+                            <styles:CornerIconRadioButton Margin="0,0,5,0"
+                                                          Content="登录"
+                                                          Data="{DynamicResource Login}"
+                                                          x:Name="ChmlfrpPageButton"
+                                                          Click="NavigateChmlfrpPage" />
+
+                            <styles:CornerIconRadioButton Content="设置"
+                                                          Data="{DynamicResource Settings}"
+                                                          Click="NavigateSettings" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel HorizontalAlignment="Right"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                        <Button Margin="0,0,5,0"
+                                Style="{StaticResource IconButtonsStyle}"
+                                Content="{DynamicResource Minimize}"
+                                Click="MinimizeThis" />
+
+                        <Button Margin="0,0,15,0"
+                                Style="{StaticResource IconButtonsStyle}"
+                                Content="{DynamicResource Close}"
+                                Click="CloseThis"
+                                Tag="IsCloseButton" />
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Border Background="#C7D7EE"
+                        CornerRadius="0,0,6,6" />
+
+                <Border CornerRadius="0,0,5,5">
+                    <Border.Background>
+                        <ImageBrush Opacity="0.8"
+                                    x:Name="Imagewallpaper" />
+                    </Border.Background>
+
+                    <Frame x:Name="PagesNavigation"
+                           NavigationUIVisibility="Hidden" />
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Frame x:Name="RemindersNavigation"
+               NavigationUIVisibility="Hidden" />
+
+        <Frame x:Name="RemindersNavigationTwo"
+               NavigationUIVisibility="Hidden" />
+    </Grid>
+</Window>

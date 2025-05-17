@@ -1,11 +1,12 @@
 # Running cache files
-*obj
-*bin
-*.xsd
+*obj 
+*bin 
+*.sln 
+*.xsd 
 *.user
 
 # Rider cache files
-*.idea
+*.idea 
 *.DotSettings
 
 # VS cache files

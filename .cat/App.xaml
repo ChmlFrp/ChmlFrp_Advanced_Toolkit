@@ -1,12 +1,12 @@
 ﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             StartupUri="MainWindow.xaml">
+             StartupUri="/Views/Windows/MainWindow.xaml">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Icons/SGY/Icons.xaml" />
+                <ResourceDictionary Source="/Theme.xaml" />
+                <ResourceDictionary Source="/Images/Icons.xaml" />
                 <ResourceDictionary Source="/Styles/Style.xaml" />
-                <ResourceDictionary Source="/Themes/Theme.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

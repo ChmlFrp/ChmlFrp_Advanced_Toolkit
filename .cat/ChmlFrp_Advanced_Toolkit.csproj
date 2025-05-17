@@ -4,19 +4,20 @@
         <UseWPF>true</UseWPF>
         <OutputType>WinExe</OutputType>
         <LangVersion>latest</LangVersion>
-        <FileVersion>0.0.2.1</FileVersion>
+        <FileVersion>0.0.2.2</FileVersion>
         <TargetFramework>net48</TargetFramework>
-        <AssemblyVersion>0.0.2</AssemblyVersion>
-        <ApplicationIcon>Icons\logo.ico</ApplicationIcon>
-        <Copyright>Copyright © Qusay Diaz 2024-2025</Copyright>
+        <AssemblyVersion>0.0.2.0</AssemblyVersion>
+        <ApplicationIcon>Images\logo.ico</ApplicationIcon>
         <AssemblyName>ChmlFrp Advanced Toolkit</AssemblyName>
+        <Copyright>Copyright © Qusay Diaz 2024-2025</Copyright>
     </PropertyGroup>
 
     <ItemGroup>
         <Reference Include="System.Net.Http"/>
-        <PackageReference Include="ini-parser" Version="2.5.2" />
-        <PackageReference Include="Costura.Fody" Version="6.0.0"/>
+        <Reference Include="System.Management"/>
+        <PackageReference Include="ini-parser" Version="2.5.2"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="Costura.Fody" PrivateAssets="All" Version="6.0.0"/>
     </ItemGroup>
 
 </Project>

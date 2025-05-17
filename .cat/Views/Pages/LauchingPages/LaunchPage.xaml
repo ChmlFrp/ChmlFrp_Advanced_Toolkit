@@ -1,0 +1,41 @@
+﻿<Page x:Class="CAT.Views.Pages.LauchingPages.LaunchPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:styles="clr-namespace:CAT.Views.Windows.Styles">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Opacity="0.8"
+                Grid.Column="1"
+                Background="{DynamicResource WhiteColorLight}"
+                CornerRadius="0,0,6,0">
+            <Grid Margin="25,0,25,45">
+                <StackPanel HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Orientation="Vertical">
+
+                    <styles:CornerButton IsEnabled="False"
+                                         CornerRadius="6,6,0,0"
+                                         Height="45"
+                                         FontSize="16"
+                                         Content="未选择隧道"
+                                         x:Name="LaunchingButton"
+                                         HorizontalAlignment="Stretch" />
+
+                    <styles:CornerComboBox x:Name="TunnelComboBox"
+                                           IsEnabled="False"
+                                           Height="35"
+                                           FontSize="13"
+                                           SelectionChanged="OnSelectionChanged"
+                                           Foreground="{DynamicResource ThemeColor}"
+                                           CornerRadius="0,0,6,6"
+                                           HorizontalAlignment="Stretch" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>
