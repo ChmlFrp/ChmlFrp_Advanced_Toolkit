@@ -18,7 +18,6 @@ on:
 jobs:
 
   build:
-
     strategy:
       matrix:
         configuration: [Release]
@@ -26,9 +25,9 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Project_Path: ".cat/ChmlFrp_Advanced_Toolkit.csproj"
-      Build_Output_Path: ".cat/bin/${{ matrix.configuration }}/net48/ChmlFrp Advanced Toolkit.exe"
-
+      Project_File_Name: "ChmlFrp_Advanced_Toolkit"
+      Project_Folder_Name: ".cat"
+      
     steps:
 
     - name: Checkout
@@ -43,13 +42,13 @@ jobs:
       uses: NuGet/setup-nuget@v1
 
     - name: Restore NuGet packages
-      run: nuget restore ${{ env.Project_Path }}
+      run: nuget restore ${{ env.Project_Folder_Name }}/${{ env.Project_File_Name }}.csproj
 
     - name: Build the project
-      run: msbuild ${{ env.Project_Path }} /p:Configuration=${{ matrix.configuration }}
+      run: msbuild ${{ env.Project_Folder_Name }}/${{ env.Project_File_Name }}.csproj /p:Configuration=${{ matrix.configuration }} /p:OutDir=public\
 
     - name: Upload a Build Artifact to GitHub
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.configuration }}
-        path: ${{ env.Build_Output_Path }}
+        path: ${{ env.Project_Folder_Name }}/public/
